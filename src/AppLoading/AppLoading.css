@@ -1,0 +1,265 @@
+.app-loading-container {
+    height         : 100vh;
+    width          : 100vw;
+    background     : radial-gradient(circle at top, #020617, #38bdf8, #020617);
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    position       : relative;
+    overflow       : hidden;
+    color          : #fff;
+    font-family    : "Poppins", sans-serif;
+}
+
+/* 🔝 TOP LOGO */
+.top-logo {
+    position       : absolute;
+    top            : 22px;
+    font-size      : 20px;
+    font-weight    : 700;
+    letter-spacing : 2px;
+    opacity        : 0;
+    animation      : showTop 0.6s ease forwards;
+    animation-delay: 2.8s;
+    color          : #fff;
+}
+
+/* CENTER WRAPPER */
+.logo-wrapper {
+    text-align: center;
+}
+
+/* BMA BIG LOGO */
+.logo-text {
+    font-size     : 112px;
+    font-weight   : 800;
+    letter-spacing: 6px;
+    color         : #38bdf8;
+    animation     : logoZoom 1.6s ease forwards;
+}
+
+/* SPLIT TEXT */
+.full-form {
+    display        : flex;
+    gap            : 12px;
+    justify-content: center;
+    margin-top     : 14px;
+    font-size      : 20px;
+    font-weight    : 500;
+    opacity        : 0;
+    animation      : revealText 1s ease forwards;
+    animation-delay: 1.8s;
+}
+
+.full-form span {
+    opacity    : 0;
+    transform  : translateY(10px);
+    animation  : wordPop 0.6s ease forwards;
+    font-weight: 800
+}
+
+.full-form span:nth-child(1) {
+    animation-delay: 1.9s;
+}
+
+.full-form span:nth-child(2) {
+    animation-delay: 2.1s;
+}
+
+.full-form span:nth-child(3) {
+    animation-delay: 2.3s;
+}
+
+/* ✨ ANIMATIONS */
+
+@keyframes logoZoom {
+    0% {
+        transform: scale(0);
+        opacity  : 0;
+        filter   : blur(6px);
+    }
+
+    60% {
+        transform: scale(1.6);
+        filter   : blur(0);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity  : 1;
+    }
+}
+
+@keyframes revealText {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes wordPop {
+    to {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes showTop {
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+
+
+
+/* LOADING TEXT */
+.loading-text {
+    margin-top     : 18px;
+    font-size      : 14px;
+    letter-spacing : 1px;
+    color          : #ffffff;
+    opacity        : 0;
+    animation      : fadeIn 0.6s ease forwards;
+    animation-delay: 2.6s;
+    white-space    : nowrap;
+    /* 👈 text lock */
+}
+
+/* DOT HOLDER (FIXED WIDTH) */
+.dots {
+    display   : inline-block;
+    width     : 20px;
+    /* 👈 fixed width = no text shift */
+    text-align: left;
+}
+
+/* DOT ANIMATION */
+.dots::after {
+    content  : "...";
+    animation: dotPulse 1.4s infinite;
+}
+
+/* KEYFRAMES */
+@keyframes dotPulse {
+    0% {
+        content: "";
+    }
+
+    25% {
+        content: ".";
+    }
+
+    50% {
+        content: "..";
+    }
+
+    75% {
+        content: "...";
+    }
+
+    100% {
+        content: "";
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* 🖼️ LOGO IMAGE */
+.logo-image {
+    width          : 250px;
+    /* adjust if needed */
+    height         : auto;
+    margin         : 0 auto;
+    opacity        : 0;
+    animation      : logoZoom 1.6s ease forwards;
+    animation-delay: 0.3s;
+    filter         : drop-shadow(0 0 18px #38bdf873);
+}
+
+@media (max-width: 480px) {
+    .logo-image {
+        width: 250px;
+    }
+
+    .full-form {
+        font-size : 15px;
+        gap       : 8px;
+        margin-top: 10px;
+    }
+
+    .loading-text {
+        font-size : 12px;
+        margin-top: 14px;
+    }
+
+    .dots {
+        width: 16px;
+    }
+
+    .top-logo {
+        font-size     : 16px;
+        top           : 16px;
+        letter-spacing: 1.5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-image {
+        width: 250px;
+    }
+
+    .full-form {
+        font-size: 17px;
+        gap      : 10px;
+    }
+
+    .loading-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .logo-image {
+        width: 250px;
+    }
+
+    .full-form {
+        font-size: 18px;
+    }
+}
+
+.logo-wrapper {
+    padding: 0 16px;
+}
+
+@media (max-height: 650px) {
+    .app-loading-container {
+        background: radial-gradient(circle at center, #020617, #38bdf8, #020617);
+    }
+}
+
+/* 🔄 RELOAD BUTTON */
+.reload-btn {
+    margin-top     : 18px;
+    padding        : 8px 18px;
+    font-size      : 13px;
+    border-radius  : 20px;
+    border         : 1px solid rgba(255, 255, 255, 0.35);
+    background     : rgba(255, 255, 255, 0.08);
+    color          : #fff;
+    cursor         : pointer;
+    backdrop-filter: blur(6px);
+    transition     : all 0.3s ease;
+}
+
+.reload-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform : translateY(-1px);
+}

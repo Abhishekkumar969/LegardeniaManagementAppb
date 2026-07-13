@@ -1,0 +1,400 @@
+/* Wrapper */
+
+.gst-summary-wrapper {
+    max-width  : 900px;
+    margin     : auto;
+    padding    : 2rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color      : #333;
+}
+
+
+/* Title */
+
+.gst-title {
+    text-align   : center;
+    margin-bottom: 1.5rem;
+    font-size    : 1.3rem;
+    font-weight  : bold;
+}
+
+
+/* Payable Total (if applicable) */
+
+.gst-payable,
+.total-amount {
+    text-align : center;
+    font-weight: bold;
+    font-size  : 1.2rem;
+    margin     : 1rem 0;
+    color      : #10b981;
+}
+
+
+/* Filters */
+
+.filters {
+    display        : flex;
+    flex-wrap      : wrap;
+    justify-content: center;
+    gap            : 1rem;
+    margin-bottom  : 1.5rem;
+}
+
+.filters input,
+.filters select {
+    padding      : 0.6rem;
+    font-size    : 1rem;
+    border       : 1px solid #ccc;
+    border-radius: 6px;
+    min-width    : 150px;
+}
+
+
+/* Filter Buttons */
+
+.filter-buttons button {
+    padding         : 0.6rem 1rem;
+    font-size       : 0.95rem;
+    margin-right    : 0.5rem;
+    border          : none;
+    border-radius   : 6px;
+    background-color: #3b82f6;
+    color           : white;
+    cursor          : pointer;
+    transition      : background 0.2s ease-in-out;
+}
+
+.filter-buttons button:hover {
+    background-color: #2563eb;
+}
+
+
+/* Table Style */
+
+.gst-table {
+    width          : 100%;
+    border-collapse: collapse;
+    margin-top     : 1rem;
+}
+
+.gst-table th,
+.gst-table td {
+    border    : 1px solid #ccc;
+    padding   : 10px;
+    text-align: left;
+}
+
+.gst-table th {
+    background-color: #f2f2f2;
+}
+
+
+/* Mobile Responsive */
+
+@media screen and (max-width: 600px) {
+    .filters {
+        flex-direction: column;
+        align-items   : stretch;
+    }
+
+    .filter-buttons button {
+        width        : 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .gst-table th,
+    .gst-table td {
+        font-size: 0.9rem;
+    }
+}
+
+
+/* Animations */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity  : 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Loading and No Records */
+
+.no-records,
+.loading {
+    text-align: center;
+    margin-top: 2rem;
+    font-style: italic;
+    color     : #888;
+}
+
+
+/* Print Styles */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .gst-summary-wrapper {
+        padding: 0;
+        margin : 0;
+    }
+
+    .gst-table {
+        width    : 100%;
+        font-size: 10px;
+    }
+
+    .gst-table th {
+        background-color          : #ddd !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    body {
+        margin : 0;
+        padding: 20px;
+    }
+}
+
+
+/* Wrapper */
+
+.gst-summary-wrapper {
+    max-width  : 100%;
+    margin     : auto;
+    padding    : 15px 10px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color      : #333;
+}
+
+
+/* Title */
+
+.gst-title {
+    text-align   : center;
+    margin-bottom: 1.5rem;
+    font-size    : 1.3rem;
+    font-weight  : bold;
+}
+
+
+/* Payable Total (if applicable) */
+
+.gst-payable,
+.total-amount {
+    text-align : center;
+    font-weight: bold;
+    font-size  : 1.2rem;
+    margin     : 1rem 0;
+    color      : #10b981;
+}
+
+
+/* Filters */
+
+.filters {
+    display        : flex;
+    flex-wrap      : wrap;
+    justify-content: center;
+    gap            : 1rem;
+    margin-bottom  : 1.5rem;
+}
+
+.filters input,
+.filters select {
+    /* padding: 0.6rem; */
+    font-size    : 1rem;
+    border       : 1px solid #e8e8e8;
+    border-radius: 6px;
+    min-width    : 150px;
+}
+
+
+/* Filter Buttons */
+
+.filter-buttons button {
+    padding         : 0.6rem 1rem;
+    font-size       : 0.95rem;
+    margin-right    : 0.5rem;
+    border          : none;
+    border-radius   : 6px;
+    background-color: #3b82f6;
+    color           : white;
+    cursor          : pointer;
+    transition      : background 0.2s ease-in-out;
+}
+
+.filter-buttons button:hover {
+    background-color: #2563eb;
+}
+
+
+/* Table Style */
+
+.gst-table {
+    width          : 100%;
+    border-collapse: collapse;
+    margin-top     : 1rem;
+}
+
+.gst-table th,
+.gst-table td {
+    border     : 1px solid #ccc;
+    padding    : 10px;
+    text-align : left;
+    white-space: nowrap;
+}
+
+.gst-table th {
+    background-color: #006db6;
+}
+
+
+/* Mobile Responsive */
+
+@media screen and (max-width: 600px) {
+    .filters {
+        flex-direction: column;
+        align-items   : stretch;
+    }
+
+    .filter-buttons button {
+        width        : 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .gst-table th,
+    .gst-table td {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* Animations */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity  : 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Loading and No Records */
+
+.no-records,
+.loading {
+    text-align: center;
+    margin-top: 2rem;
+    font-style: italic;
+    color     : #888;
+}
+
+
+/* Print Styles */
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust        : exact !important;
+    }
+
+    body {
+        margin : 10mm;
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .gst-summary-wrapper {
+        padding: 0;
+        margin : 0;
+    }
+
+    .gst-table-wrapper {
+        overflow: visible !important;
+    }
+
+    .gst-table {
+        width    : 100%;
+        font-size: 10px;
+    }
+
+    .gst-table th {
+        background-color: #006db6 !important;
+    }
+}
+
+.gst-table-wrapper {
+    width     : 100%;
+    overflow-x: auto;
+    /* ✅ horizontal scroll allow */
+}
+
+.gst-table {
+    min-width      : 700px;
+    /* ✅ table ka minimum width set */
+    border-collapse: collapse;
+}
+
+.filter-row {
+    display        : flex;
+    justify-content: center;
+    flex-wrap      : wrap;
+    gap            : 15px;
+    margin-top     : 15px;
+}
+
+.filter-item {
+    display    : flex;
+    align-items: center;
+    gap        : 8px;
+    white-space: nowrap;
+}
+
+.filter-item label {
+    font-weight: 600;
+}
+
+/* Mobile View */
+@media (max-width: 600px) {
+    .filter-row {
+        flex-direction: column;
+        align-items   : flex-start;
+        gap           : 12px;
+    }
+
+    .filter-item {
+        width          : 100%;
+        justify-content: space-between;
+    }
+
+    .filter-item select,
+    .filter-item input,
+    .input [type="date"] {
+        width: 55% !important;
+    }
+}

@@ -1,0 +1,52 @@
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background   : linear-gradient(to right, #cfe9fb, #d9f0ff);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background   : linear-gradient(90deg, #6ab6ec, #3c80b7);
+  border-radius: 10px;
+  transition   : all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #56a1d8, #326b9d);
+}
+
+.scrollable-menu::-webkit-scrollbar {
+  opacity   : 0;
+  transition: opacity 0.25s ease;
+}
+
+.scrollable-menu:hover::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.scrollable-menu {
+  scrollbar-color: #026e92 #e2f3ff00;
+  scrollbar-width: thin;
+}
+
+
+/* Mobile devices only */
+@media (max-width: 568px) {
+
+  /* Chrome, Edge, Safari */
+  .scrollable-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  .scrollable-menu {
+    scrollbar-width: none;
+  }
+
+  /* IE / Old Edge */
+  .scrollable-menu {
+    -ms-overflow-style: none;
+  }
+}
