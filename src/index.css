@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    margin     : 0;
+}
+
+h1,
+h2 {
+    color: #333;
+}
+
+button {
+    padding   : 10px 15px;
+    background: blue;
+    color     : white;
+    border    : none;
+    cursor    : pointer;
+}
+
+/* ===== PRINT CLEAN SETUP ===== */
+@media print {
+    @page {
+        size  : A4;
+        margin: 0;
+        /* 🚫 browser header/footer ke liye jagah hi nahi */
+    }
+
+    body {
+        margin : 0;
+        padding: 0;
+    }
+
+    /* Optional: background & colors exact print ke liye */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust        : exact;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #print-area,
+    #print-area * {
+        visibility: visible;
+    }
+
+    #print-area {
+        position: absolute;
+        left    : 0;
+        top     : 0;
+        width   : 100%;
+    }
+}
+
+
+html,
+body {
+    height    : 100%;
+    overflow-y: auto;
+}
+
+
+html,
+body {
+    overflow-x: auto;
+}
+
+.horizontal-scroll {
+    overflow-x                : auto;
+    overflow                  : visible !important;
+    -webkit-overflow-scrolling: touch;
+}

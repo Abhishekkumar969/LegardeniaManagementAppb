@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  # Netlify Secret Scanning configuration to avoid false positives with Firebase keys
+  # AIza is the standard prefix for Firebase/Google Cloud API keys which are safe to expose in client-side apps
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIza"
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "true"
+
+[[redirects]]
+  # Redirect all routes to index.html for Single Page Application (SPA) support
+  from = "/*"
+  to = "/index.html"
+  status = 200
