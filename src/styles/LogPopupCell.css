@@ -1,0 +1,356 @@
+.log-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 999999 !important;   /* SUPER TOP */
+    pointer-events: auto;
+}
+
+.log-popup-overlay {
+    position       : fixed;
+    inset          : 0;
+    background     : rgba(0, 0, 0, 0.6);
+    z-index        : 9999 !important;
+    /* 🔼 Put above nav */
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    animation      : fadeIn 0.3s ease;
+}
+
+.log-popup-box {
+    position       : relative;
+    background     : #fff;
+    padding        : 30px 24px;
+    border-radius  : 14px;
+    max-width      : 900px;
+    width          : 90%;
+    max-height     : 90vh;
+    overflow-y     : auto;
+    overflow-x     : hidden;
+    /* ⛔ prevent horizontal scroll */
+    box-shadow     : 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation      : slideUp 0.4s ease;
+    scrollbar-width: thin;
+    /* optional smooth scrollbars */
+}
+
+.log-popup-close {
+    position  : absolute;
+    top       : 18px;
+    right     : 22px;
+    font-size : 22px;
+    background: none;
+    border    : none;
+    color     : #444;
+    cursor    : pointer;
+    z-index   : 10001;
+}
+
+.log-popup-close:hover {
+    transform: scale(1.2);
+}
+
+
+/* Header */
+
+.log-popup-heading {
+    font-size    : 20px;
+    margin-bottom: 20px;
+    text-align   : center;
+    color        : #1d3557;
+}
+
+
+/* Log entry */
+
+.log-entry {
+    background   : #f5faff;
+    padding      : 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    border-bottom: 2px solid #2e86de;
+    border-left  : 6px solid #2e86de;
+    animation    : fadeInUp 0.5s ease;
+}
+
+
+/* Entry header */
+
+.log-entry-header {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    font-weight    : 500;
+    margin-bottom  : 12px;
+    color          : #1a1a1a;
+}
+
+
+/* Each row */
+
+.log-row {
+    margin-bottom: 18px;
+}
+
+.log-label {
+    font-weight  : 600;
+    margin-bottom: 8px;
+    color        : #444;
+    font-size    : 15px;
+    display      : flex;
+}
+
+
+/* Columns for old and new values */
+
+.log-cols {
+    display    : flex;
+    align-items: flex-start;
+    gap        : 16px;
+    flex-wrap  : wrap;
+}
+
+.log-old-col {
+    background   : #ffeaea;
+    color        : #b51a1a;
+    flex         : 1;
+    min-width    : 40%;
+    padding      : 10px;
+    border-radius: 8px;
+    font-size    : 14px;
+    line-height  : 1.5;
+    transition   : all 0.3s ease;
+}
+
+.log-new-col {
+    background   : #e3ffe9;
+    color        : #186c3b;
+    flex         : 1;
+    min-width    : 40%;
+    padding      : 10px;
+    border-radius: 8px;
+    font-size    : 14px;
+    line-height  : 1.5;
+    transition   : all 0.3s ease;
+}
+
+.log-arrow {
+    font-size  : 20px;
+    padding-top: 8px;
+    color      : #aaa;
+}
+
+
+/* Button styling */
+
+.log-popup-btn {
+    padding      : 0px 14px;
+    border       : none;
+    border-radius: 6px;
+    /* background: linear-gradient(145deg, #2e86de, #5dade2); */
+    color        : white;
+    font-weight  : 500;
+    cursor       : pointer;
+    transition   : all 0.3s ease;
+}
+
+.log-popup-btn:hover {
+    transform : translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Media Queries for responsiveness */
+
+@media (max-width: 768px) {
+    .log-popup-box {
+        padding: 20px 16px;
+    }
+
+    .log-cols {
+        flex-direction: column;
+    }
+
+    .log-old-col,
+    .log-new-col {
+        min-width: 100%;
+    }
+
+    .log-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .log-popup-heading {
+        font-size: 17px;
+    }
+
+    .log-label {
+        font-size: 14px;
+    }
+}
+
+
+/* Animations */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity  : 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity  : 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(12px);
+        opacity  : 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity  : 1;
+    }
+}
+
+.log-old-col,
+.log-new-col {
+    word-wrap    : break-word;
+    word-break   : break-word;
+    overflow-wrap: break-word;
+    text-align   : left;
+}
+
+
+/* Log print button inside modal */
+
+.log-popup-print {
+    position   : absolute;
+    top        : 18px;
+    left       : 22px;
+    font-size  : 16px;
+    background : none;
+    border     : none;
+    color      : #2e86de;
+    cursor     : pointer;
+    font-weight: 600;
+    transition : all 0.3s ease;
+}
+
+.log-popup-print:hover {
+    transform       : scale(1.1);
+    color           : #1b4f72;
+    background-color: transparent;
+}
+
+
+/* 🔒 Hide button in printed page */
+
+@media print {
+    body {
+        margin     : 0;
+        padding    : 0;
+        background : white;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    .log-popup-overlay,
+    .log-popup-box {
+        all      : unset;
+        display  : block;
+        margin   : 0 auto;
+        padding  : 30px;
+        width    : 100%;
+        max-width: 1000px;
+    }
+
+    .log-popup-heading {
+        font-size    : 22px;
+        text-align   : center;
+        color        : #1d3557;
+        margin-bottom: 24px;
+    }
+
+    .log-entry {
+        border-left      : 6px solid #2e86de;
+        padding          : 20px;
+        background       : #f9f9f9;
+        margin-bottom    : 32px;
+        page-break-inside: avoid;
+    }
+
+    .log-entry-header {
+        display        : flex;
+        justify-content: space-between;
+        font-weight    : bold;
+        color          : #333;
+        margin-bottom  : 12px;
+    }
+
+    .log-label {
+        font-weight  : 600;
+        margin-bottom: 8px;
+        font-size    : 15px;
+        color        : #444;
+    }
+
+    .log-cols {
+        display        : flex;
+        justify-content: space-between;
+        gap            : 16px;
+        flex-wrap      : nowrap;
+    }
+
+    .log-old-col,
+    .log-new-col {
+        width        : 48%;
+        min-height   : 40px;
+        font-size    : 14px;
+        padding      : 12px;
+        border-radius: 6px;
+        box-sizing   : border-box;
+    }
+
+    .log-old-col {
+        background: #ffeaea;
+        color     : #b51a1a;
+    }
+
+    .log-new-col {
+        background: #e3ffe9;
+        color     : #186c3b;
+    }
+
+    .log-arrow {
+        display: none;
+    }
+
+    .log-popup-btn,
+    .log-popup-close,
+    .log-popup-print {
+        display: none !important;
+    }
+}
+
+.log-by-info {
+    font-size: 13px;
+    color    : #555;
+    display  : flex;
+    margin   : 0px 0 0px 0;
+}

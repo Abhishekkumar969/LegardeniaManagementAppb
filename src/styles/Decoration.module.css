@@ -1,0 +1,303 @@
+.decorationWrapper {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+
+  margin-top: 0px;
+  padding-top: 0px;
+}
+
+.decorationHeader {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #2e6999;
+  margin-bottom: 10px;
+}
+
+.decorationSubheader {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.topPopup {
+  background-color: #ffc107;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.decorationPopupBtn {
+  background-color: #2e6999;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.formSection {
+  flex-direction: column;
+  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 30px;
+}
+
+.formSection input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.errorMsg {
+  color: red;
+  font-size: 12px;
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
+.decorationTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+.decorationTable th,
+.decorationTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.decorationTable th {
+  background-color: #2e6999;
+  color: white;
+}
+
+.decorationTable input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customService {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.customService input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customService button {
+  padding: 8px 14px;
+  background-color: #2e6999;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.summaryInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+  margin-bottom: 30px;
+}
+
+.summaryInputs label {
+  font-weight: bold;
+}
+
+.summaryInputs input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.saveBtn {
+  padding: 10px 20px;
+  background-color: #007b55;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.popupHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.popupHeader input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.popupList {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.popupItem {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.popupItem:hover {
+  background-color: #f1f1f1;
+}
+
+.popupCustomEvent {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.popupCustomEvent input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.popupCustomEvent button {
+  padding: 8px 16px;
+  background-color: #2e6999;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 🌐 Responsive: screens ≤ 700px */
+@media (max-width: 700px) {
+  .decorationWrapper {
+    padding: 20px 15px;
+
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
+  .decorationHeader {
+    font-size: 22px;
+  }
+
+  .decorationSubheader {
+    font-size: 12px;
+  }
+
+  .formSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .decorationPopupBtn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 440px) {
+  .decorationHeader {
+    font-size: 20px;
+  }
+
+  .decorationSubheader {
+    font-size: 11px;
+  }
+
+  .decorationPopupBtn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .decorationTable th,
+  .decorationTable td {
+    border: 1px solid #ccc;
+    padding: 4px;
+    text-align: left;
+  }
+
+  .decorationTable td input {
+    border: 1px solid #cccccc00;
+    padding: 0px !important;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .decorationTable input {
+    width: 100%;
+    padding: 0px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .customService {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+}
+
+th label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* text aur checkbox ke beech space */
+}

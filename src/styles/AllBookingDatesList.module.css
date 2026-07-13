@@ -1,0 +1,232 @@
+/* MAIN CONTAINER */
+.calendarContainer {
+    padding    : 15px;
+    max-width  : 1300px;
+    margin     : auto;
+    font-family: "Inter", sans-serif;
+}
+
+/* HEADER */
+.calHeader {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    margin-bottom  : 18px;
+}
+
+.navBtn {
+    background   : #448df9;
+    color        : white;
+    padding      : 8px 14px;
+    border       : none;
+    border-radius: 6px;
+    cursor       : pointer;
+    font-size    : 16px;
+    box-shadow   : inset 2px 2px 5px #086bff;
+}
+
+.navBtn:hover {
+    background: #8cbaff;
+    box-shadow: inset 2px 2px 5px #448df9;
+}
+
+/* FILTER */
+.filterBox {
+    margin-bottom: 12px;
+    display      : flex;
+    align-items  : center;
+    gap          : 8px;
+}
+
+.filterBox label {
+    font-size: 15px;
+}
+
+.venueSelect {
+    flex         : 1;
+    padding      : 10px;
+    border-radius: 8px;
+    border       : 1px solid #ccc;
+}
+
+/* WEEKDAYS */
+.weekdayRow {
+    display              : grid;
+    grid-template-columns: repeat(7, 1fr);
+    background           : #00a2ff;
+    padding              : 8px 0;
+    border-radius        : 6px;
+    margin-bottom        : 5px;
+}
+
+.weekday {
+    text-align : center;
+    font-weight: 600;
+    color      : #fff;
+}
+
+/* CALENDAR GRID */
+.calendarGrid {
+    display              : grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap                  : 10px;
+}
+
+/* EMPTY CELL */
+.emptyCell {
+    height    : 0;
+    padding   : 0;
+    margin    : 0;
+    visibility: hidden;
+}
+
+/* DATE BOX */
+.dateBox {
+    background    : #d7ffbc !important;
+    border-radius : 10px;
+    padding       : 10px;
+    min-height    : 60px;
+    transition    : 0.2s;
+    display       : flex;
+    flex-direction: column;
+    border        : 1px solid #cbeeba;
+}
+
+.dateBox:hover {
+    transform: scale(1.02);
+}
+
+.dateBox.booked {
+    background  : #fcb7b7 !important;
+    border-color: #ff9b9b;
+}
+
+/* DATE NUMBER */
+.dateNumber {
+    font-size  : 19px;
+    font-weight: 700;
+}
+
+/* BOOKING ITEM */
+.smallBooking {
+    padding      : 3px;
+    border-radius: 6px;
+    background   : #fee8e8;
+    border       : 1px solid #dcdcdc;
+    margin-bottom: 6px;
+}
+
+.time {
+    font-size: 13px;
+    color    : #444;
+}
+
+/* VIEW BUTTONS */
+.viewBtn {
+    padding      : 4px 8px;
+    font-size    : 11px;
+    border-radius: 5px;
+    background   : #007bff;
+    border       : none;
+    color        : #fff;
+    cursor       : pointer;
+}
+
+.viewBtn:hover {
+    background: #005ccc;
+}
+
+/* FREE TEXT */
+.noBooking {
+    margin-top : auto;
+    font-size  : 14px;
+    color      : #216a00;
+    font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+/* LARGE TABLET */
+@media (max-width: 1024px) {
+    .calendarGrid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+    .weekdayRow {
+        display: none;
+    }
+
+    .calendarGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap                  : 8px;
+    }
+
+    .emptyCell {
+        display: none !important;
+        height : 0 !important;
+    }
+
+    .dateBox {
+        min-height: 60px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 550px) {
+    .calendarGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap                  : 6px;
+    }
+
+    .dateNumber {
+        font-size: 17px;
+    }
+
+    .smallBooking {
+        padding: 5px;
+    }
+}
+
+/* MINI MOBILE */
+@media (max-width: 380px) {
+    .calendarGrid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* POPUP */
+.popupOverlay {
+    position       : fixed;
+    inset          : 0;
+    background     : rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(0px);
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    z-index        : 9000;
+}
+
+.popupBox {
+    background   : white;
+    padding      : 22px;
+    width        : 90%;
+    max-width    : 420px;
+    border-radius: 14px;
+    position     : relative;
+    text-align   : left;
+}
+
+.closeBtn {
+    position     : absolute;
+    right        : 10px;
+    top          : 10px;
+    background   : #ff4b4b;
+    color        : white;
+    padding      : 5px 11px;
+    border-radius: 6px;
+    border       : none;
+    cursor       : pointer;
+}

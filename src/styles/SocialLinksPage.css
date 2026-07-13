@@ -1,0 +1,311 @@
+/* ================================================
+   EVENT MANAGER – PREMIUM UI THEME (GREEN + GOLD)
+   ================================================ */
+
+/* PAGE LAYOUT */
+.decoration-page {
+  max-width  : 1150px;
+  margin     : auto;
+  padding    : 25px;
+  font-family: "Inter", sans-serif;
+  background : linear-gradient(135deg, #f5fff5, #f0fdf4);
+}
+
+/* TITLES */
+.decoration-title {
+  text-align    : center;
+  font-size     : 30px;
+  font-weight   : 800;
+  color         : #14532d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.decoration-subtitle {
+  text-align   : center;
+  font-size    : 15px;
+  color        : #4c7c59;
+  margin-bottom: 25px;
+}
+
+/* INPUTS & DROPDOWNS */
+.decoration-input {
+  width          : 100%;
+  padding        : 14px;
+  margin-bottom  : 14px;
+  font-size      : 15px;
+  border-radius  : 12px;
+  border         : 1px solid #cfe8d9;
+  background     : rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  transition     : 0.25s ease;
+}
+
+.decoration-input:focus {
+  outline     : none;
+  border-color: #22c55e;
+  background  : white;
+  box-shadow  : 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+/* SAVE BUTTON (inside form) */
+.decoration-add-btn {
+  padding      : 12px 25px;
+  background   : linear-gradient(135deg, #16a34a, #22c55e);
+  color        : white;
+  font-weight  : 700;
+  border       : none;
+  border-radius: 12px;
+  cursor       : pointer;
+  transition   : 0.25s ease;
+  box-shadow   : 0 4px 15px rgba(34, 197, 94, 0.4);
+  margin-bottom: 20px;
+}
+
+.decoration-add-btn:hover {
+  background: linear-gradient(135deg, #0f8a3d, #16a34a);
+  transform : translateY(-2px);
+}
+
+/* keep wrapper same */
+.add-link-wrapper {
+  width          : 100%;
+  display        : flex;
+  justify-content: flex-end;
+  margin-bottom  : 15px;
+  position       : relative;
+  z-index        : 10;
+}
+
+/* Close button sticks inside same wrapper */
+.add-link-wrapper .decoration-add-main-btn.close-btn {
+  background: linear-gradient(135deg, #e60202, #ff0000);
+  position  : absolute;
+  right     : 0;
+  top       : 0;
+  color     : white;
+  font-size : 14px;
+}
+
+.decoration-filter-btn {
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: 0.25s ease;
+}
+
+.decoration-filter-btn:hover {
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  transform: translateY(-2px);
+}
+.filter-box {
+  margin-top: 0px;
+  position: relative;
+}
+
+
+.decoration-add-main-btn {
+  padding      : 10px 18px;
+  background   : linear-gradient(135deg, #16a34a, #22c55e);
+  color        : white;
+  font-weight  : 700;
+  border       : none;
+  border-radius: 10px;
+  cursor       : pointer;
+  box-shadow   : 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition   : 0.25s ease;
+}
+
+.decoration-add-main-btn:hover {
+  background: linear-gradient(135deg, #0f8a3d, #16a34a);
+  transform : translateY(-2px);
+}
+
+
+
+.decoration-add-main-btn.close-btn:hover {
+  background: linear-gradient(135deg, #fe1919, #ff0000);
+  transform : translateY(-2px);
+  color     : white;
+}
+
+/* GRID */
+.decoration-grid {
+  display              : grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap                  : 20px;
+}
+
+/* CARD */
+.decoration-card {
+  background     : rgba(255, 255, 255, 0.7);
+  border-radius  : 16px;
+  backdrop-filter: blur(10px);
+  box-shadow     : 0 8px 25px rgba(0, 0, 0, 0.08);
+  border         : 1px solid rgba(255, 255, 255, 0.4);
+  overflow       : hidden;
+  transition     : 0.3s ease;
+  cursor         : pointer;
+  position       : relative;
+}
+
+.decoration-card:hover {
+  transform : translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Thumbnail */
+.decoration-thumbnail-wrapper {
+  width     : 100%;
+  height    : 180px;
+  overflow  : hidden;
+  background: #e8f5e9;
+}
+
+.decoration-thumbnail {
+  width     : 100%;
+  height    : 100%;
+  object-fit: cover;
+  transition: 0.4s ease;
+}
+
+.decoration-card:hover .decoration-thumbnail {
+  transform: scale(1.08);
+}
+
+/* YT Player */
+.yt-player {
+  width        : 100%;
+  height       : 190px;
+  border-radius: 12px;
+}
+
+/* CARD BODY */
+.decoration-card-body {
+  padding     : 14px 0px;
+  margin-right: 20px;
+}
+
+/* TAG GROUPS */
+.decoration-tag-group,
+.decoration-tag-service-group {
+  display      : flex;
+  flex-wrap    : wrap;
+  gap          : 4px;
+  margin-bottom: 6px;
+}
+
+/* FUNCTION TAG */
+.decoration-tag {
+  display       : inline-block;
+  background    : linear-gradient(135deg, #018431, #22c55e);
+  padding       : 5px 12px;
+  font-size     : 12px;
+  font-weight   : 600;
+  color         : white;
+  border-radius : 8px;
+  letter-spacing: 0.3px;
+}
+
+/* SERVICE TAG */
+.decoration-tag-service {
+  display       : inline-block;
+  background    : linear-gradient(135deg, #b55c04, #ff8000);
+  padding       : 5px 12px;
+  font-size     : 12px;
+  font-weight   : 600;
+  color         : white;
+  border-radius : 8px;
+  letter-spacing: 0.3px;
+}
+
+/* CAPTION */
+.decoration-caption {
+  font-size  : 15px;
+  font-weight: 500;
+  margin-top : 6px;
+  color      : #14532d;
+  line-height: 1.4;
+}
+
+/* DELETE BUTTON */
+.decoration-delete-btn {
+  position     : absolute;
+  bottom       : 12px;
+  right        : 12px;
+  background   : #dc2626;
+  color        : rgb(249, 249, 249);
+  border       : none;
+  padding      : 7px 14px;
+  border-radius: 10px;
+  font-size    : 13px;
+  cursor       : pointer;
+  transition   : 0.25s ease;
+  box-shadow   : 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.decoration-delete-btn:hover {
+  background: #b91c1c;
+  transform : translateY(-2px);
+}
+
+.decoration-clear-btn {
+  padding      : 12px 25px;
+  background   : #ff0000;
+  color        : #ffffff;
+  font-weight  : 700;
+  border       : none;
+  border-radius: 12px;
+  cursor       : pointer;
+  transition   : 0.25s ease;
+  box-shadow   : 0 4px 12px rgba(0, 0, 0, 0.15);
+  height       : fit-content;
+}
+
+.decoration-clear-btn:hover {
+  background: #b50202;
+  transform : translateY(-2px);
+}
+
+
+/* ----------------------------------------
+   MOBILE RESPONSIVE
+   ---------------------------------------- */
+
+@media (max-width: 768px) {
+  .decoration-title {
+    font-size: 24px;
+  }
+
+  .decoration-input {
+    font-size: 14px;
+  }
+
+  .decoration-grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .decoration-title {
+    font-size: 22px;
+  }
+
+  .decoration-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .decoration-thumbnail-wrapper {
+    height: 170px;
+  }
+
+  .yt-player {
+    height: 170px;
+  }
+}

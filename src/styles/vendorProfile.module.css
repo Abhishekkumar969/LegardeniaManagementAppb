@@ -1,0 +1,364 @@
+/* ---------- Container & Base ---------- */
+.container {
+  padding        : 40px 25px;
+  font-family    : 'Poppins', sans-serif;
+  background     : rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius  : 25px;
+  box-shadow     : 0 25px 50px rgba(0, 0, 0, 0.25);
+  color          : #1f2937;
+  transition     : all 0.3s ease;
+}
+
+.backButtonWrapper {
+  margin-bottom: 30px;
+}
+
+.heading {
+  font-size    : 1.8rem;
+  font-weight  : 600;
+  color        : #0f172a;
+  margin-bottom: 10px;
+  line-height  : 1.3;
+}
+
+.emailLine {
+  font-size    : 0.95rem;
+  color        : #334155;
+  margin-bottom: 15px;
+}
+
+/* ---------- Profile Info Card ---------- */
+.adminProfileInfo {
+  background   : rgba(255, 255, 255, 0.12);
+  padding      : 20px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  transition   : all 0.3s ease;
+}
+
+/* ---------- Field Row ---------- */
+.fieldRow {
+  margin-bottom : 20px;
+  padding-bottom: 15px;
+  border-bottom : 1px dashed #cbd5e1;
+  transition    : all 0.3s ease;
+}
+
+.fieldHeader {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+}
+
+.fieldLabel {
+  font-weight: 600;
+  font-size  : 0.9rem;
+  white-space: nowrap;
+}
+
+.fieldValue {
+  margin-left  : 10px;
+  margin-bottom: 10px;
+}
+
+.valueText {
+  color         : #555;
+  text-transform: capitalize;
+  font-size     : 0.9rem;
+  font-weight   : 400;
+}
+
+.termsText {
+  color      : #555;
+  white-space: pre-line;
+  font-size  : 0.9rem;
+  font-weight: 400;
+}
+
+/* ---------- Buttons ---------- */
+.editButton,
+.toggleButton,
+.saveButton,
+.cancelButton,
+.saveButtonPrimary {
+  cursor       : pointer;
+  border-radius: 10px;
+  font-weight  : 500;
+  transition   : all 0.3s ease;
+}
+
+.editButton {
+  background: #2e6999;
+  color     : #fff;
+  border    : none;
+  padding   : 6px 14px;
+  font-size : 0.95rem;
+}
+
+.editButton:hover {
+  background: #1e40af;
+}
+
+.textarea {
+  width        : 100%;
+  margin-top   : 10px;
+  padding      : 12px;
+  border-radius: 12px;
+  border       : 1px solid #ccc;
+  resize       : none;
+  font-family  : inherit;
+  font-size    : 0.9rem;
+}
+
+.buttonGroup {
+  display        : flex;
+  justify-content: flex-end;
+  gap            : 10px;
+  margin-top     : 10px;
+}
+
+.saveButton {
+  background: #2563eb;
+  color     : #fff;
+  padding   : 8px 20px;
+}
+
+.saveButton:hover {
+  background: #1e40af;
+}
+
+.cancelButton {
+  background: #e2e8f0;
+  color     : #111827;
+  padding   : 8px 20px;
+}
+
+.cancelButton:hover {
+  background: #cbd5e1;
+}
+
+.saveButtonPrimary {
+  font-size    : 1.1rem;
+  background   : #2e6999;
+  color        : #fff;
+  padding      : 8px 22px;
+  border-radius: 12px;
+  margin-top   : 15px;
+  border       : none;
+}
+
+.saveButtonPrimary:hover {
+  background: #17496f;
+}
+
+/* ---------- Section Headers ---------- */
+.sectionHeader {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+  margin-bottom  : 10px;
+}
+
+.subHeading {
+  font-weight: 600;
+  font-size  : 1rem;
+  color      : #1e293b;
+}
+
+/* ---------- Toggle Buttons ---------- */
+.toggleButton {
+  font-size    : 1.2rem;
+  background   : #2e6999;
+  color        : #fff;
+  padding      : 4px 16px;
+  border       : none;
+  border-radius: 10px;
+}
+
+.toggleButton:hover {
+  background: #17496f;
+}
+
+.activeToggle {
+  transform: rotate(180deg);
+}
+
+/* ---------- Tags & Badges ---------- */
+.tagList {
+  margin-top: 10px;
+  display   : flex;
+  flex-wrap : wrap;
+  gap       : 8px;
+}
+
+.badge {
+  padding      : 5px 10px;
+  border-radius: 8px;
+  font-size    : 0.85rem;
+  background   : #cde3f8;
+  color        : #1e3a8a;
+  transition   : transform 0.2s, box-shadow 0.2s;
+}
+
+.badge:hover {
+  transform : translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.emptyText {
+  color    : #888;
+  font-size: 0.85rem;
+}
+
+/* ---------- Dropdown Sections ---------- */
+.dropdownSection {
+  margin-top: 15px;
+}
+
+.selectBox {
+  width        : 100%;
+  border-radius: 12px !important;
+}
+
+/* ---------- Loading Spinner ---------- */
+.loadingContainer {
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  min-height     : 200px;
+  flex-direction : column;
+}
+
+.spinner {
+  width           : 40px;
+  height          : 40px;
+  border          : 4px solid #cbd5e1;
+  border-top-color: #2e6999;
+  border-radius   : 50%;
+  animation       : spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message {
+  font-size : 0.95rem;
+  color     : #555;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.bottomSpacing {
+  margin-bottom: 150px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 15px;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+  }
+
+  .subHeading {
+    font-size: 0.95rem;
+  }
+
+  .editButton,
+  .toggleButton,
+  .saveButton,
+  .cancelButton,
+  .saveButtonPrimary {
+    font-size: 0.9rem;
+    padding  : 6px 14px;
+  }
+
+  .badge {
+    font-size: 0.8rem;
+    padding  : 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 40px 15px;
+  }
+
+  .heading {
+    font-size: 1.3rem;
+  }
+
+  .fieldLabel {
+    font-size: 0.85rem;
+  }
+
+  .toggleButton,
+  .editButton {
+    padding  : 4px 10px;
+    font-size: 0.85rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding  : 3px 6px;
+  }
+}
+
+.colorSection {
+  margin-top      : 10px;
+  padding         : 10px;
+  background-color: #eae9e9;
+  border-radius   : 8px;
+
+}
+
+.colorRow {
+  display      : flex;
+  align-items  : center;
+  gap          : 10px;
+  margin-bottom: 5px;
+}
+
+.expenseTable {
+  display       : flex;
+  flex-direction: column;
+  gap           : 10px;
+}
+
+.expenseRow {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+}
+
+.expenseInput {
+  flex         : 1;
+  padding      : 6px 10px;
+  border-radius: 8px;
+  border       : 1px solid #ccc;
+}
+
+.addButton {
+  margin-top      : 10px;
+  background-color: #028a41;
+  color           : white;
+  padding         : 10px 15px;
+  border          : none;
+  border-radius   : 8px;
+  cursor          : pointer;
+}
+
+.deleteButton {
+  background-color: #ffc9c8;
+  color           : white;
+  border          : none;
+  border-radius   : 8px;
+  padding         : 10px 15px;
+  cursor          : pointer;
+}

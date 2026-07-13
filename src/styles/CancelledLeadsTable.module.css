@@ -1,0 +1,221 @@
+.leads-table-container {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeSlideIn 0.5s ease-out;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.leads-header {
+    background: linear-gradient(135deg, #2e6999, #519bd3);
+    color: white;
+    padding: 14px 20px;
+    font-size: 1.4em;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    animation: headerDrop 0.4s ease-in;
+}
+
+@keyframes headerDrop {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.table-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    animation: tablePop 0.3s ease-in;
+}
+
+@keyframes tablePop {
+    0% {
+        transform: scale(0.96);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.leads-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease-in-out;
+}
+
+.leads-table th,
+.leads-table td {
+    border: 2px solid #d1d1d1;
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.leads-table th {
+    background-color: #2e6999;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.leads-table tr:hover {
+    background-color: #f1faff;
+    transform: scale(1.01);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.leads-table td:hover {
+    background-color: #e1f4ff;
+    font-weight: 600;
+}
+
+
+/* Win Probability Legend */
+
+.win-prob-legend {
+    margin-top: 2rem;
+    background-color: #f1f5f8;
+    padding: 12px 18px;
+    border-left: 5px solid #2e6999;
+    border-radius: 8px;
+    max-width: 450px;
+    font-size: 1rem;
+    animation: fadeIn 0.6s ease;
+}
+
+.win-prob-legend ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 8px;
+}
+
+.win-prob-legend li {
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+
+/* Color Classes */
+
+.low-prob {
+    background-color: #ffb5b5;
+}
+
+.medium-prob {
+    background-color: #ffe0b4;
+}
+
+.high-prob {
+    background-color: #fcffb3;
+}
+
+.very-high-prob {
+    background-color: #adffb3;
+}
+
+
+/* ✅ Mobile Responsive */
+
+@media (max-width: 768px) {
+    .leads-table th,
+    .leads-table td {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    .leads-header {
+        font-size: 1.2em;
+    }
+    .win-prob-legend {
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+    .table-scroll-container {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 480px) {
+    .leads-header {
+        font-size: 1em;
+        padding: 10px;
+    }
+    .leads-table-container {
+        padding: 10px;
+    }
+    .leads-table th,
+    .leads-table td {
+        font-size: 11px;
+        padding: 5px 6px;
+    }
+    .win-prob-legend {
+        padding: 10px 12px;
+    }
+}
+
+
+/* ✅ Print View */
+
+@media print {
+    .print-button,
+    .print-controls h2,
+    .filter-popup,
+    .no-print {
+        display: none !important;
+    }
+    .leads-table {
+        font-size: 12px;
+        border: none;
+    }
+    .leads-table th,
+    .leads-table td {
+        padding: 4px;
+        border: 1px solid #000;
+        color: black !important;
+        background: white !important;
+    }
+    .leads-header {
+        background: black !important;
+        color: white !important;
+    }
+}

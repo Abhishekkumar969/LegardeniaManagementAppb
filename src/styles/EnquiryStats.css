@@ -1,0 +1,110 @@
+/* ===============================
+   MAIN CONTAINER
+================================= */
+
+.stats-container {
+    padding       : 5px;
+    padding-bottom: 20px;
+    background    : "linear-gradient(135deg, #f4f9ff, #eef6ff)";
+    min-height    : 100vh;
+    font-family   : "Segoe UI", Roboto, sans-serif;
+    border-radius : 15px;
+}
+
+.stats-container h2 {
+    text-align   : center;
+    font-size    : 28px;
+    font-weight  : 700;
+    margin-bottom: 35px;
+    color        : #1f3c88;
+}
+
+.stats-container h3 {
+    margin-top   : 50px;
+    margin-bottom: 20px;
+    font-size    : 20px;
+    font-weight  : 600;
+    color        : #2d4059;
+}
+
+/* ===============================
+   GRID LAYOUT
+================================= */
+
+.stats-grid {
+    display              : grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap                  : 20px;
+}
+
+/* ===============================
+   STAT CARD
+================================= */
+
+.stat-card {
+    background   : white;
+    padding      : 5px 22px;
+    border-radius: 16px;
+    box-shadow   : 0 8px 20px rgba(0, 0, 0, 0.06);
+    transition   : all 0.3s ease;
+    position     : relative;
+    overflow     : hidden;
+}
+
+.stat-card:hover {
+    transform : translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Decorative Accent Line */
+.stat-card::before {
+    content   : "";
+    position  : absolute;
+    top       : 0;
+    left      : 0;
+    width     : 6px;
+    height    : 100%;
+    background: linear-gradient(180deg, #4CAF50, #2196F3);
+}
+
+/* ===============================
+   TITLE
+================================= */
+
+.stat-card h4 {
+    font-size     : 14px;
+    font-weight   : 600;
+    color         : #6b7c93;
+    margin-bottom : 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===============================
+   VALUE
+================================= */
+
+.stat-card p {
+    font-size  : 26px;
+    font-weight: 700;
+    color      : #1f3c88;
+    margin     : 0;
+}
+
+/* ===============================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 768px) {
+    .stats-container {
+        padding: 25px 15px;
+    }
+
+    .stat-card {
+        padding: 5px 18px;
+    }
+
+    .stat-card p {
+        font-size: 22px;
+    }
+}

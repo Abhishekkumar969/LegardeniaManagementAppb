@@ -1,0 +1,282 @@
+/* =========================================================
+   STATS PAGE – PREMIUM LIGHT DASHBOARD
+   Clean • Soft • Glass • Fintech Style
+   ========================================================= */
+
+:root {
+  --bg-main: #f6f8fc;
+  --bg-card: #ffffff;
+  --bg-soft: #f0f3f9;
+
+  --border-soft  : #e4e9f2;
+  --border-strong: #d7deea;
+
+  --primary     : #2563eb;
+  --primary-soft: rgba(37, 99, 235, 0.12);
+  --green       : #16a34a;
+  --orange      : #f59e0b;
+  --red         : #dc2626;
+  --purple      : #7c3aed;
+
+  --text-main : #0f172a;
+  --text-soft : #475569;
+  --text-muted: #64748b;
+
+  --shadow-sm: 0 4px 10px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-main: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif;
+}
+
+/* --------------------------------
+   PAGE CONTAINER
+-------------------------------- */
+
+.stats-container {
+  min-height : 100vh;
+  background : linear-gradient(180deg, #f9fbff, #eef2f9);
+  padding    : 16px;
+  color      : var(--text-main);
+  font-family: var(--font-main);
+}
+
+/* --------------------------------
+   HEADING
+-------------------------------- */
+
+.stats-container>h2 {
+  font-size    : 1.55rem;
+  font-weight  : 600;
+  margin-bottom: 16px;
+  display      : flex;
+  align-items  : center;
+  gap          : 10px;
+}
+
+.stats-container>h2::before {
+  content      : "";
+  width        : 6px;
+  height       : 22px;
+  border-radius: 999px;
+  background   : linear-gradient(to bottom, var(--primary), #60a5fa);
+}
+
+/* --------------------------------
+   CONTROL SECTION
+-------------------------------- */
+
+.control-section {
+  background   : var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding      : 14px;
+  display      : flex;
+  flex-wrap    : wrap;
+  gap          : 14px;
+  border       : 1px solid var(--border-soft);
+  box-shadow   : var(--shadow-md);
+}
+
+/* GROUP */
+.target-input-group {
+  background   : var(--bg-soft);
+  border       : 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding      : 10px;
+  display      : flex;
+  flex-wrap    : wrap;
+  gap          : 8px;
+  align-items  : center;
+}
+
+/* LABEL */
+.target-input-group label {
+  font-size     : 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight   : 600;
+  color         : var(--text-muted);
+}
+
+/* INPUTS */
+.target-input-group input,
+.target-input-group select {
+  background   : #fff;
+  border       : 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding      : 6px 10px;
+  font-size    : 0.85rem;
+  color        : var(--text-main);
+}
+
+.target-input-group input:focus,
+.target-input-group select:focus {
+  outline     : none;
+  border-color: var(--primary);
+  box-shadow  : 0 0 0 2px var(--primary-soft);
+}
+
+/* CLEAR BUTTON */
+.clear-btn {
+  background   : #fee2e2;
+  color        : var(--red);
+  border       : 1px solid #fecaca;
+  padding      : 6px 12px;
+  border-radius: 999px;
+  cursor       : pointer;
+  font-size    : 0.75rem;
+  font-weight  : 600;
+}
+
+.clear-btn:hover {
+  background: #fecaca;
+}
+
+/* --------------------------------
+   MONTH GRID
+-------------------------------- */
+
+.month-grid {
+  margin-top           : 18px;
+  display              : grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap                  : 14px;
+}
+
+/* CARD */
+.month-card {
+  background   : var(--bg-card);
+  border       : 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding      : 12px;
+  box-shadow   : var(--shadow-sm);
+  transition   : all 0.2s ease;
+}
+
+.month-card:hover {
+  transform   : translateY(-2px);
+  box-shadow  : var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.month-card strong {
+  font-size: 0.9rem;
+  color    : var(--purple);
+}
+
+/* --------------------------------
+   SUMMARY ROW
+-------------------------------- */
+
+.summary-row {
+  margin-top   : 18px;
+  background   : var(--bg-card);
+  border       : 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding      : 12px;
+  display      : flex;
+  flex-wrap    : wrap;
+  gap          : 10px 18px;
+  box-shadow   : var(--shadow-md);
+}
+
+.summary-row div {
+  font-size: 0.9rem;
+  color    : var(--text-soft);
+}
+
+.summary-row strong {
+  color: var(--text-main);
+}
+
+/* --------------------------------
+   MODE BUTTONS
+-------------------------------- */
+
+.mode-btn {
+  background   : var(--bg-card);
+  border       : 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding      : 6px 12px;
+  font-size    : 0.75rem;
+  font-weight  : 600;
+  cursor       : pointer;
+  box-shadow   : var(--shadow-sm);
+}
+
+.mode-btn:hover {
+  border-color: var(--primary);
+}
+
+/* --------------------------------
+   TRANSACTION TABLE
+-------------------------------- */
+
+.transaction-table-container {
+  margin-top   : 16px;
+  background   : var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding      : 14px;
+  border       : 1px solid var(--border-soft);
+  box-shadow   : var(--shadow-md);
+}
+
+.transaction-table {
+  width          : 100%;
+  border-collapse: collapse;
+  font-size      : 0.85rem;
+}
+
+.transaction-table thead th {
+  text-transform: uppercase;
+  font-size     : 0.7rem;
+  letter-spacing: 0.06em;
+  text-align    : left;
+  padding       : 8px;
+  color         : var(--text-muted);
+  border-bottom : 1px solid var(--border-soft);
+}
+
+.transaction-table td {
+  padding      : 8px;
+  border-bottom: 1px solid var(--border-soft);
+  color        : var(--text-main);
+}
+
+/* CREDIT / DEBIT ROW COLOR OVERRIDE */
+.transaction-table tbody tr[style*="0ba106"] {
+  background: #ecfdf5 !important;
+  color     : #065f46 !important;
+}
+
+.transaction-table tbody tr[style*="c40505"] {
+  background: #fef2f2 !important;
+  color     : #7f1d1d !important;
+}
+
+/* --------------------------------
+   MOBILE
+-------------------------------- */
+
+@media (max-width: 768px) {
+  .control-section {
+    flex-direction: column;
+  }
+
+  .target-input-group {
+    width: 100%;
+  }
+
+  .month-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .month-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,304 @@
+.custom-items-section {
+    padding      : 20px;
+    background   : #f5f7fb;
+    border-radius: 16px;
+    font-family  : 'Segoe UI', sans-serif;
+    margin       : 20px 0;
+    animation    : sectionSlideIn 0.5s ease-in-out;
+}
+
+@keyframes sectionSlideIn {
+    0% {
+        opacity  : 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-items-section h4 {
+    font-size    : 20px;
+    font-weight  : 700;
+    color        : #2c3e50;
+    margin-bottom: 20px;
+    animation    : fadeInTitle 0.6s ease;
+}
+
+@keyframes fadeInTitle {
+    from {
+        opacity  : 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity  : 1;
+        transform: translateX(0);
+    }
+}
+
+.custom-item-card {
+    background-color: #ffffff;
+    padding         : 16px 20px;
+    border-radius   : 14px;
+    box-shadow      : 0 4px 14px rgba(0, 0, 0, 0.06);
+    margin-bottom   : 18px;
+    transition      : 0.4s ease;
+    animation       : cardPop 0.3s ease-in-out;
+}
+
+@keyframes cardPop {
+    from {
+        transform: scale(0.96);
+        opacity  : 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity  : 1;
+    }
+}
+
+.custom-item-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform : translateY(-3px);
+}
+
+.custom-item-card input {
+    padding         : 8px 12px;
+    font-size       : 15px;
+    border-radius   : 8px;
+    border          : 1px solid #ccc;
+    background-color: #fdfdfd;
+    transition      : 0.25s;
+}
+
+.custom-item-card input:focus {
+    border-color    : #3f51b5;
+    background-color: #ffffff;
+    box-shadow      : 0 0 0 3px rgba(63, 81, 181, 0.15);
+    outline         : none;
+}
+
+.math-symbol {
+    font-size: 18px;
+    color    : #0d0d0d;
+}
+
+.total-display {
+    font-weight: bold;
+    color      : #2e7d32;
+    font-size  : 18px;
+    margin-left: auto;
+    white-space: nowrap;
+    animation  : pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.remove-btn {
+    background   : crimson;
+    color        : white;
+    border       : none;
+    padding      : 8px 12px;
+    font-weight  : bold;
+    border-radius: 8px;
+    cursor       : pointer;
+    transition   : background 0.3s ease;
+}
+
+.remove-btn:hover {
+    background: darkred;
+}
+
+.add-item-btn {
+    padding      : 12px 16px;
+    background   : linear-gradient(135deg, #2e7d32, #66bb6a);
+    border       : none;
+    color        : white;
+    font-weight  : bold;
+    border-radius: 10px;
+    cursor       : pointer;
+    transition   : background 0.3s ease, transform 0.2s ease;
+    font-size    : 16px;
+}
+
+.add-item-btn:hover {
+    background: linear-gradient(135deg, #1b5e20, #43a047);
+    transform : translateY(-2px);
+}
+
+.custom-item-card input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #2e7d32;
+    transform   : scale(1.2);
+}
+
+
+/* 📱 Responsive Layouts */
+
+@media (max-width: 768px) {
+    .custom-item-card {
+        flex-direction: column;
+        align-items   : stretch;
+        gap           : 10px;
+        padding       : 14px 16px;
+    }
+
+    .custom-item-card input[type="text"],
+    .custom-item-card input[type="number"] {
+        min-width: unset;
+    }
+
+    .custom-item-card input[type="radio"] {
+        transform: scale(1.1);
+    }
+
+    .total-display {
+        margin-top: 6px;
+        font-size : 16px;
+        align-self: flex-end;
+        text-align: right;
+    }
+
+    .add-item-btn,
+    .remove-btn {
+        width    : 100%;
+        font-size: 15px;
+        padding  : 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-items-section {
+        padding: 12px;
+        margin : 12px 0;
+    }
+
+    .custom-item-card {
+        padding: 12px;
+        gap    : 8px;
+    }
+
+    .custom-item-card input {
+        font-size: 13px;
+        padding  : 7px 10px;
+    }
+
+    .custom-item-card input[type="radio"] {
+        transform: scale(1.1);
+    }
+
+    .total-display {
+        font-size: 15px;
+    }
+
+    .add-item-btn,
+    .remove-btn {
+        padding  : 10px;
+        font-size: 14px;
+        width    : 100%;
+    }
+}
+
+.item-header-row {
+    display    : flex;
+    align-items: center;
+    gap        : 10px;
+}
+
+.item-header-row input[type="text"] {
+    flex            : 1;
+    padding         : 10px 12px;
+    border-radius   : 8px;
+    font-size       : 15px;
+    background-color: #fff;
+    width           : 800px;
+}
+
+.item-header-row input[type="checkbox"] {
+    transform   : scale(1.2);
+    accent-color: #2e7d32;
+}
+
+.item-body-row {
+    display     : flex;
+    align-items : center;
+    gap         : 10px;
+    /* flex-wrap: wrap; */
+    margin-top  : 6px;
+}
+
+.item-body-row input[type="number"] {
+    width        : 80px;
+    padding      : 8px !important;
+    font-size    : 14px;
+    border-radius: 6px;
+}
+
+.math-symbol {
+    font-size: 16px;
+    color    : #454444;
+}
+
+.total-display {
+    font-weight: bold;
+    color      : #2e7d32;
+    font-size  : 16px;
+    margin-left: auto;
+}
+
+
+/* 📱 Responsive */
+
+@media (max-width: 750px) {
+    .item-header-row {
+        flex-direction: row;
+        gap           : 8px;
+    }
+
+    .item-header-row input[type="text"] {
+        flex: 1 1 100%;
+    }
+
+    .item-body-row {
+        gap         : 8px;
+        /* flex-wrap: wrap; */
+    }
+
+    .item-body-row input[type="number"] {
+        flex         : 1 1 30%;
+        min-width    : 60px;
+        width        : 80px;
+        padding      : 5px !important;
+        font-size    : 14px;
+        border-radius: 6px;
+    }
+
+    .total-display {
+        flex      : 1 1 100%;
+        text-align: right;
+        margin-top: 5px;
+    }
+
+    .item-header-row input[type="text"] {
+        flex            : 1;
+        padding         : 5px 12px;
+        border-radius   : 8px;
+        font-size       : 15px;
+        background-color: #fff;
+        width           : 200px;
+    }
+}

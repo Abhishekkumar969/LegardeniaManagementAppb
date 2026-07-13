@@ -1,0 +1,327 @@
+/* ========== Decoration Profile Page Styles ========== */
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 50px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+.heading {
+  text-align: center;
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* ---------- Decoration Info Section ---------- */
+.decorationInfo {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 35px;
+  border: 1px solid #e2e8f0;
+}
+
+.fieldRow {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.fieldRow:last-child {
+  border-bottom: none;
+}
+
+.itemButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.editInput,
+.editTextarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.editInput:focus,
+.editTextarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.editButton,
+.deleteButton,
+.saveButton,
+.cancelButton,
+.button {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.deleteButton {
+  background-color: #ef4444;
+}
+
+.saveButton {
+  background-color: #10b981;
+}
+
+.cancelButton {
+  background-color: #64748b;
+}
+
+.editButton:hover {
+  background-color: #1d4ed8;
+}
+
+.saveButton:hover {
+  background-color: #059669;
+}
+
+.cancelButton:hover {
+  background-color: #475569;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626;
+}
+
+.button:hover {
+  transform: scale(1.03);
+}
+
+/* ---------- Dropdown ---------- */
+.subHeading {
+  display: block;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6px;
+  margin-top: 20px;
+}
+
+.selectBox {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  color: #1e293b;
+  background-color: #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.selectBox:hover {
+  background-color: #e2e8f0;
+}
+
+/* ---------- Input & Buttons ---------- */
+.inputBox {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  color: #0f172a;
+  transition: 0.2s;
+}
+
+.inputBox:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.message {
+  color: #94a3b8;
+  text-align: center;
+  padding: 10px;
+}
+
+/* ---------- Accordion ---------- */
+.itemsSection {
+  margin-top: 40px;
+}
+
+.itemsSection h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 15px;
+  border-left: 5px solid #2563eb;
+  padding-left: 10px;
+}
+
+.accordionItem {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  margin-bottom: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.accordionItem:hover {
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+}
+
+.accordionHeader {
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggleIcon {
+  font-size: 1.2rem;
+  color: #2563eb;
+}
+
+.accordionContentWrapper {
+  padding: 0 20px 15px 20px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.accordionContent {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+  transition: 0.2s;
+}
+
+.itemRow:last-child {
+  border-bottom: none;
+}
+
+.itemRow span {
+  font-size: 0.95rem;
+  color: #0f172a;
+  flex: 1;
+}
+
+.addItemRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  align-items: center;
+}
+
+.addItemRow .inputBox {
+  flex: 1;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .container {
+    padding: 25px;
+  }
+
+  .heading {
+    font-size: 1.6rem;
+  }
+
+  .accordionHeader {
+    font-size: 0.95rem;
+  }
+}
+
+
+.emailContainer {
+  display: flex;
+  align-items: center;
+  /* vertically center items */
+  justify-content: center;
+  /* center horizontally */
+  gap: 20px;
+  /* space between email and button */
+  margin-bottom: 30px;
+}
+
+.emailLine {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0;
+  /* remove bottom margin */
+}
+
+.showDetails {
+  background-color: #ebde25;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+}
+
+.showDetails:hover {
+  background-color: #1d4ed8;
+  transform: scale(1.05);
+}
+
+.InsertFields {
+  background-color: #f4f2f292;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  box-shadow: inset 5px 5px 20px rgb(255, 255, 255), inset 5px 5px 20px rgb(144, 144, 144);
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* adjust height */
+}
+
+.spinner {
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid #2563eb; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+button {
+  outline: none;
+}

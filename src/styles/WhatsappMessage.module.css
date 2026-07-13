@@ -1,0 +1,259 @@
+.container {
+    max-width    : 680px;
+    margin       : 24px auto;
+    padding      : 24px;
+    background   : #ffffff;
+    border-radius: 16px;
+    box-shadow   : 0 20px 40px rgba(0, 0, 0, 0.08);
+    font-family  : "Inter", system-ui, sans-serif;
+}
+
+.title {
+    font-size    : 22px;
+    font-weight  : 700;
+    margin-bottom: 16px;
+    color        : #1f2937;
+    display      : flex;
+    align-items  : center;
+    gap          : 8px;
+}
+
+.select {
+    width        : 100%;
+    padding      : 12px 14px;
+    border-radius: 10px;
+    border       : 1px solid #d1d5db;
+    font-size    : 15px;
+    background   : #fafafa;
+    transition   : all 0.2s ease;
+}
+
+.select:focus {
+    outline     : none;
+    border-color: #25d366;
+    background  : #ffffff;
+    box-shadow  : 0 0 0 3px rgba(37, 211, 102, 0.15);
+}
+
+.textarea {
+    width        : 100%;
+    margin-top   : 10px;
+    padding      : 14px;
+    border-radius: 12px;
+    border       : 1px solid #d1d5db;
+    font-size    : 15px;
+    resize       : vertical;
+    min-height   : 120px;
+    transition   : all 0.2s ease;
+}
+
+.textarea:focus {
+    outline     : none;
+    border-color: #25d366;
+    box-shadow  : 0 0 0 3px rgba(37, 211, 102, 0.15);
+}
+
+.textareaDisabled {
+    background: #f3f4f6;
+    cursor    : not-allowed;
+}
+
+.actions {
+    display   : flex;
+    gap       : 12px;
+    margin-top: 14px;
+}
+
+.saveBtn {
+    flex         : 1;
+    padding      : 12px;
+    border-radius: 10px;
+    border       : none;
+    font-size    : 15px;
+    font-weight  : 600;
+    cursor       : pointer;
+    background   : linear-gradient(135deg, #25d366, #1ebe5d);
+    color        : #ffffff;
+    transition   : transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.saveBtn:hover {
+    transform : translateY(-1px);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
+}
+
+.saveBtn:disabled {
+    opacity: 0.6;
+    cursor : not-allowed;
+}
+
+.deleteBtn {
+    flex         : 1;
+    padding      : 12px;
+    border-radius: 10px;
+    border       : none;
+    font-size    : 15px;
+    font-weight  : 600;
+    cursor       : pointer;
+    background   : linear-gradient(135deg, #ff4d4f, #e63946);
+    color        : #ffffff;
+    transition   : transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.deleteBtn:hover {
+    transform : translateY(-1px);
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
+}
+
+.divider {
+    margin    : 24px 0;
+    border    : none;
+    height    : 1px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+}
+
+.savedTitle {
+    font-size    : 18px;
+    font-weight  : 600;
+    margin-bottom: 12px;
+    color        : #111827;
+}
+
+.cardList {
+    display       : flex;
+    flex-direction: column;
+    gap           : 12px;
+}
+
+.card {
+    padding      : 14px 16px;
+    border-radius: 14px;
+    border       : 1px solid #e5e7eb;
+    background   : #fafafa;
+    cursor       : pointer;
+    transition   : all 0.2s ease;
+}
+
+.card:hover {
+    background  : #ffffff;
+    border-color: #25d366;
+    box-shadow  : 0 10px 25px rgba(0, 0, 0, 0.08);
+    transform   : translateY(-1px);
+}
+
+.cardTitle {
+    font-weight  : 600;
+    margin-bottom: 6px;
+    color        : #065f46;
+}
+
+.cardText {
+    font-size  : 14px;
+    color      : #374151;
+    white-space: pre-wrap;
+}
+
+.empty {
+    font-size : 14px;
+    color     : #6b7280;
+    text-align: center;
+    padding   : 20px 0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin       : 16px;
+        padding      : 18px;
+        border-radius: 14px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .saveBtn,
+    .deleteBtn {
+        width: 100%;
+    }
+
+    .card {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin : 12px;
+        padding: 14px;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .select,
+    .textarea {
+        font-size: 14px;
+    }
+
+    .cardText {
+        font-size: 13px;
+    }
+}
+
+.placeholderBar {
+    display    : flex;
+    align-items: center;
+    flex-wrap  : wrap;
+    gap        : 8px;
+    margin     : 12px 0 6px;
+}
+
+.placeholderLabel {
+    font-size  : 13px;
+    font-weight: 600;
+    color      : #374151;
+}
+
+.placeholderBtn {
+    padding      : 6px 10px;
+    font-size    : 13px;
+    border-radius: 8px;
+    border       : 1px dashed #25d366;
+    background   : #f0fdf4;
+    color        : #065f46;
+    cursor       : pointer;
+    font-weight  : 600;
+    transition   : all 0.15s ease;
+}
+
+.placeholderBtn:hover {
+    background  : #dcfce7;
+    border-color: #16a34a;
+}
+
+.formatBar {
+    display: flex;
+    gap    : 8px;
+    margin : 8px 0;
+}
+
+.formatBtn {
+    padding      : 6px 10px;
+    border-radius: 6px;
+    border       : 1px solid #d1d5db;
+    background   : #50d1cc;
+    cursor       : pointer;
+    font-size    : 14px;
+    font-weight  : 600;
+    transition   : all 0.15s ease;
+}
+
+.formatBtn:hover {
+    background  : #2ce965;
+    border-color: #25d366;
+}

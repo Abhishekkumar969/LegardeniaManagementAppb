@@ -1,0 +1,603 @@
+/* ================= ROOT ================= */
+.room-bookings {
+    margin     : auto;
+    padding    : 20px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background : linear-gradient(135deg, #f4f7fb, #eaeef5);
+}
+
+/* ================= HEADINGS ================= */
+.room-bookings h2 {
+    font-size    : 26px;
+    color        : #4b7bec;
+    margin-bottom: 16px;
+    text-shadow  : 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= CARD (3D) ================= */
+.card {
+    background   : linear-gradient(145deg, #ffffff, #f0f3f8);
+    border-radius: 14px;
+    padding      : 18px;
+    margin-bottom: 20px;
+    box-shadow   :
+        0 8px 18px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    transform-style: preserve-3d;
+    transition     : transform 0.35s ease, box-shadow 0.35s ease;
+    color          : #3b8ea3;
+}
+
+.card:hover {
+    transform : translateY(-4px) scale(1.01);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* ================= INPUTS ================= */
+.room-bookings input,
+.room-bookings select {
+    width        : 100%;
+    padding      : 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border       : 1px solid #ccd3e0;
+    background   : #fff;
+    font-size    : 14px;
+    transition   : all 0.25s ease;
+}
+
+.room-bookings input:focus,
+.room-bookings select:focus {
+    outline     : none;
+    border-color: #4b7bec;
+    box-shadow  : 0 0 0 3px rgba(75, 123, 236, 0.25);
+    transform   : translateZ(2px);
+}
+
+/* ================= BUTTONS (3D) ================= */
+.room-bookings button {
+    padding         : 10px 16px;
+    border-radius   : 10px;
+    border          : none;
+    font-weight     : 600;
+    cursor          : pointer;
+    transition      : all 0.25s ease;
+    box-shadow      : 0 6px 0 rgba(0, 0, 0, 0.15);
+    background-color: #0f8eb9;
+}
+
+.room-bookings button:active {
+    transform : translateY(4px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4b7bec, #3867d6);
+    color     : #fff;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #20bf6b, #0fb9b1);
+    color     : #fff;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #eb3b5a, #c0392b);
+    color     : #fff;
+}
+
+/* ================= ROOM LIST ================= */
+.room-list {
+    display              : grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap                  : 10px;
+}
+
+/* ================= DATE HEADER ================= */
+.date-header {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    gap            : 10px;
+}
+
+/* ================= BOOKING ITEM ================= */
+.booking-item {
+    background     : linear-gradient(135deg, #f9fbff, #eef3ff);
+    border-left    : 6px solid #4b7bec;
+    padding        : 12px;
+    border-radius  : 10px;
+    margin-bottom  : 10px;
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    animation      : fadeUp 0.4s ease;
+    transition     : transform 0.25s ease;
+}
+
+.booking-item:hover {
+    transform: translateX(4px);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity  : 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= MODAL ================= */
+.modal-backdrop {
+    position       : fixed;
+    inset          : 0;
+    background     : rgba(0, 0, 0, 0.55);
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    z-index        : 999;
+    animation      : fadeIn 0.3s ease;
+}
+
+.modal {
+    background   : linear-gradient(145deg, #ffffff, #f3f6fb);
+    width        : 95%;
+    max-width    : 920px;
+    max-height   : 90vh;
+    overflow-y   : auto;
+    padding      : 20px;
+    border-radius: 16px;
+    box-shadow   : 0 25px 60px rgba(0, 0, 0, 0.35);
+    animation    : pop3d 0.35s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pop3d {
+    from {
+        transform: scale(0.9) rotateX(6deg);
+        opacity  : 0;
+    }
+
+    to {
+        transform: scale(1) rotateX(0);
+        opacity  : 1;
+    }
+}
+
+/* ================= GUEST BOX ================= */
+.guest-box {
+    background   : linear-gradient(135deg, #ffffff, #f6f8fc);
+    border-radius: 12px;
+    padding      : 12px;
+    margin-bottom: 12px;
+    box-shadow   : inset 0 0 0 1px #dde3f0,
+        0 6px 14px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s ease;
+}
+
+.guest-box:hover {
+    transform: translateY(-2px);
+}
+
+.guest-box h4 {
+    margin-bottom: 8px;
+    font-size    : 14px;
+    color        : #3867d6;
+}
+
+/* ================= PRICE SUMMARY ================= */
+.price-summary {
+    background     : linear-gradient(135deg, #eaf2ff, #d6e4ff);
+    border-radius  : 10px;
+    padding        : 12px;
+    margin-top     : 10px;
+    font-weight    : bold;
+    display        : flex;
+    justify-content: space-between;
+    box-shadow     : inset 0 0 0 1px #c7d6ff;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 600px) {
+    .date-header {
+        flex-direction: column;
+        align-items   : flex-start;
+    }
+
+    .booking-item {
+        flex-direction: column;
+        align-items   : flex-start;
+        gap           : 6px;
+    }
+
+    .modal {
+        padding: 16px;
+    }
+
+    .room-bookings button {
+        padding   : 3px 8px;
+        box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+
+    }
+
+    .card H3 {
+        font-size: 15px;
+    }
+
+    .cal-header H2 {
+        font-size: 17px;
+    }
+}
+
+
+.date-time-row {
+    display      : flex;
+    gap          : 16px;
+    margin-bottom: 12px;
+}
+
+.date-time-box {
+    flex         : 1;
+    border       : 1px solid #ddd;
+    border-radius: 10px;
+    padding      : 12px;
+    background   : #fafafa;
+}
+
+.field-label {
+    font-size    : 13px;
+    font-weight  : 600;
+    margin-bottom: 4px;
+    display      : block;
+}
+
+.field-input {
+    width        : 100%;
+    padding      : 8px 10px;
+    border-radius: 6px;
+    border       : 1px solid #ccc;
+    font-size    : 14px;
+    margin-bottom: 10px;
+}
+
+.field-input:focus {
+    outline     : none;
+    border-color: #4caf50;
+    background  : #f9fff9;
+}
+
+@media (max-width: 600px) {
+    .date-time-row {
+        flex-direction: column;
+    }
+}
+
+.invalid-field {
+    border: 2px solid red !important;
+}
+
+.room-grid {
+    display              : grid;
+    grid-template-columns: repeat(auto-fill, 120px);
+    gap                  : 8px;
+}
+
+.room-tile {
+    padding      : 8px;
+    border       : 1px solid #ccc;
+    border-radius: 8px;
+    text-align   : center;
+    cursor       : pointer;
+}
+
+.room-tile.selected {
+    border    : 2px solid green;
+    background: #e7ffe7;
+}
+
+.gst-summary {
+    margin-top   : 14px;
+    padding      : 12px;
+    border-radius: 8px;
+    background   : #f9fafb;
+    border       : 1px solid #e5e7eb;
+}
+
+.gst-summary h4 {
+    margin     : 0 0 8px 0;
+    font-size  : 14px;
+    font-weight: 600;
+    color      : #111827;
+}
+
+.gst-summary>div {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    padding        : 4px 0;
+    font-size      : 13px;
+    color          : #374151;
+}
+
+.gst-summary>div span:last-child {
+    font-weight: 500;
+}
+
+.gst-summary .gst-total {
+    margin-top : 6px;
+    padding-top: 6px;
+    border-top : 1px dashed #cbd5e1;
+    font-weight: 600;
+    color      : #111827;
+}
+
+
+
+.rates-summary,
+.gst-summary {
+    margin-top   : 12px;
+    padding      : 12px;
+    border-radius: 10px;
+    background   : #fafafa;
+    border       : 1px solid #e0e0e0;
+}
+
+.rates-total,
+.gst-total {
+    border-top : 1px dashed #ccc;
+    margin-top : 6px;
+    padding-top: 6px;
+    text-align : right;
+    font-size  : 14px;
+}
+
+.booking-table {
+    width          : 100%;
+    border-collapse: collapse;
+    font-size      : 14px;
+}
+
+/* =========================
+   ROOT CARD
+========================= */
+.rooms-manager-card {
+    background   : #ffffff;
+    border-radius: 16px;
+    padding      : 18px;
+    box-shadow   : 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   HEADER
+========================= */
+.rooms-manager-card h3 {
+    font-size    : 18px;
+    font-weight  : 600;
+    margin-bottom: 16px;
+    color        : #1f2937;
+}
+
+/* =========================
+   GRID
+========================= */
+.rooms-grid {
+    display              : grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap                  : 16px;
+}
+
+/* =========================
+   ROOM CARD
+========================= */
+.room-card {
+    border-radius  : 14px;
+    padding        : 14px;
+    background     : #ffffff;
+    border         : 1px solid #e5e7eb;
+    transition     : all 0.25s ease;
+    display        : flex;
+    flex-direction : column;
+    justify-content: space-between;
+}
+
+.room-card:hover {
+    transform : translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   BOOKED STATE
+========================= */
+.room-card.booked {
+    background  : linear-gradient(135deg, #fff5f5, #ffe4e4);
+    border-color: #fca5a5;
+}
+
+.room-card.booked::after {
+    content      : "BOOKED";
+    position     : absolute;
+    top          : 10px;
+    right        : 10px;
+    font-size    : 10px;
+    font-weight  : 700;
+    color        : #b91c1c;
+    background   : #fee2e2;
+    padding      : 2px 6px;
+    border-radius: 6px;
+}
+
+/* =========================
+   ROOM HEADER
+========================= */
+.room-title {
+    font-size    : 15px;
+    font-weight  : 600;
+    color        : #111827;
+    margin-bottom: 6px;
+}
+
+.room-rate {
+    font-size    : 14px;
+    color        : #374151;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   STATUS TEXT
+========================= */
+.room-status {
+    font-size    : 12px;
+    font-weight  : 600;
+    margin-bottom: 10px;
+}
+
+.room-status.booked {
+    color: #dc2626;
+}
+
+.room-status.available {
+    color: #16a34a;
+}
+
+/* =========================
+   BUTTON GROUP
+========================= */
+.room-actions {
+    display   : flex;
+    gap       : 8px;
+    margin-top: auto;
+}
+
+.room-actions button {
+    flex         : 1;
+    padding      : 8px 10px;
+    border-radius: 10px;
+    font-size    : 13px;
+    font-weight  : 600;
+    cursor       : pointer;
+    border       : none;
+    transition   : all 0.2s ease;
+}
+
+/* =========================
+   EDIT MODE
+========================= */
+.room-edit label {
+    font-size    : 12px;
+    font-weight  : 600;
+    color        : #374151;
+    margin-bottom: 4px;
+}
+
+.room-edit input {
+    width        : 100%;
+    padding      : 8px 10px;
+    border-radius: 10px;
+    border       : 1px solid #d1d5db;
+    font-size    : 14px;
+    margin-bottom: 10px;
+}
+
+.room-edit input:focus {
+    outline     : none;
+    border-color: #2563eb;
+    box-shadow  : 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================
+   BUTTON COLORS
+========================= */
+.btn-primary {
+    background: #2563eb;
+    color     : #fff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-success {
+    background: #16a34a;
+    color     : #fff;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color     : #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor : not-allowed;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .rooms-manager-card {
+        padding: 14px;
+    }
+
+    .room-card {
+        padding: 12px;
+    }
+
+    .room-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.DateOccupancy {
+    display        : flex;
+    justify-content: space-between;
+    gap            : 20px;
+}
+
+@media (max-width: 620px) {
+    .DateOccupancy {
+        display: block;
+    }
+}
+
+
+/* =========================
+    BUTTON COLORS
+========================= */
+.btn-primary {
+    font-weight: 800;
+    background : #2563eb;
+    color      : #fff;
+}
+
+.btn-primary:hover {
+    background: #46aede !important;
+}

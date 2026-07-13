@@ -1,0 +1,102 @@
+.filter-container {
+    background: #f9f9f9;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 0.1);
+    max-width: 700px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 10px auto;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.filter-container>div {
+    margin-bottom: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.filter-container label {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.filter-container input[type="text"],
+.filter-container input[type="number"],
+.filter-container input[type="date"] {
+    margin-top: 6px;
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-container input[type="text"]:focus,
+.filter-container input[type="number"]:focus,
+.filter-container input[type="date"]:focus {
+    border-color: #2e6999;
+    outline: none;
+}
+
+.filter-container button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    min-width: 80px;
+    width: fit-content;
+}
+
+.filter-container button:first-child {
+    background-color: #2e6999;
+    color: white;
+}
+
+
+/* .filter-container button:first-child:hover {
+    background-color: #0056b3;
+} */
+
+.filter-container button:last-child {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+/* .filter-container button:last-child:hover {
+    background-color: #495057;
+}
+ */
+
+
+/* Responsive tweaks */
+
+@media (max-width: 480px) {
+    .filter-container {
+        padding: 12px 16px;
+    }
+    .filter-container>div {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .filter-container label {
+        flex: 1 1 40%;
+        font-size: 13px;
+    }
+    .filter-container button {
+        width: 100%;
+    }
+}

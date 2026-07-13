@@ -1,0 +1,147 @@
+/* =====================
+   CALENDAR CONTAINER
+===================== */
+.calendar-container {
+    padding      : 16px;
+    border-radius: 14px;
+    background   : #ffffff;
+    box-shadow   : 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+/* =====================
+   HEADER
+===================== */
+.cal-header {
+    display        : flex;
+    align-items    : center;
+    justify-content: space-between;
+    margin-bottom  : 12px;
+}
+
+.cal-header h2 {
+    font-size  : 18px;
+    font-weight: 600;
+    margin     : 0;
+    color      : #222;
+}
+
+.nav-btn {
+    border       : none;
+    background   : #f1f3f5;
+    border-radius: 8px;
+    padding      : 6px 12px;
+    cursor       : pointer;
+    font-size    : 14px;
+    transition   : all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: #4172a3;
+}
+
+/* =====================
+   WEEKDAYS
+===================== */
+.weekday-row {
+    display              : grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom        : 6px;
+    border-radius        : 12px;
+    gap                  : 10px;
+}
+
+.weekday {
+    text-align      : center;
+    font-size       : 12px;
+    font-weight     : 600;
+    color           : #ffffff;
+    padding         : 6px 0;
+    background-color: #3a74ae;
+    border-radius   : 8px;
+}
+
+/* =====================
+   CALENDAR GRID
+===================== */
+.calendar-grid {
+    display              : grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap                  : 8px;
+}
+
+/* =====================
+   CELLS
+===================== */
+.empty-cell {
+    height: 60px;
+}
+
+.date-box {
+    min-height     : 39px;
+    height         : 60px;
+    border-radius  : 12px;
+    padding        : 6px;
+    cursor         : pointer;
+    position       : relative;
+    transition     : all 0.2s ease;
+    display        : flex;
+    align-items    : flex-start;
+    justify-content: flex-end;
+    justify-content: center;
+    align-items    : center;
+}
+
+/* Date number */
+.date-number {
+    font-size      : 13px;
+    font-weight    : 600;
+    color          : #333;
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+}
+
+/* =====================
+   AVAILABLE
+===================== */
+.date-box.available {
+    background: #d6fade;
+    border    : 1px solid #19ef4e;
+    box-shadow: inset 4px 4px 8px #ffffff;
+}
+
+.date-box.available:hover {
+    background: #ecfff2;
+    transform : translateY(-2px);
+}
+
+/* =====================
+   BOOKED
+===================== */
+.date-box.booked {
+    background: linear-gradient(135deg, #ffecec, #ffd6d6);
+    border    : 1px solid #eb2727;
+    box-shadow: inset 4px 4px 8px #ffffff;
+}
+
+.date-box.booked:hover {
+    background: linear-gradient(135deg, #ffdede, #ffc8c8);
+    transform : translateY(-2px);
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 600px) {
+    .date-box {
+        height: 20px;
+    }
+
+    .calendar-container {
+        padding: 12px;
+    }
+
+    .weekday {
+        padding: 1px 0;
+    }
+}

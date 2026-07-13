@@ -1,0 +1,101 @@
+.payment-bar {
+    position       : fixed;
+    top            : 10px;
+    left           : 0;
+    right          : 0;
+    background     : #30abc4;
+    color          : #ffffff;
+    padding        : 0px 20px;
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    font-size      : 16px;
+    cursor         : pointer;
+    z-index        : 10000;
+    width          : 25vw;
+    margin         : 0px auto;
+    height         : 65px;
+    border-radius  : 25px;
+    border         : 2px solid #ffffff;
+    box-shadow     : inset 2px 2px 6px #09708599, 2px 2px 6px #0f778c99;
+    animation      : floatBar 2s ease-in-out infinite;
+}
+
+.payment-bar:hover {
+    animation: floatBar 0s ease-in-out infinite;
+}
+
+.pay-now {
+    font-weight   : 600;
+    background    : linear-gradient(90deg, #ffffff, #ffffff);
+    box-shadow    : 2px 2px 4px #004351;
+    color         : #227a8c;
+    border        : 2px solid #106a7c;
+    padding       : 8px 28px;
+    border-radius : 25px;
+    font-weight   : 800;
+    letter-spacing: 1px;
+    text-shadow   : 2px 2px 4px #b9baba;
+}
+
+.payment-bar:hover .pay-now {
+    transform: scale(1.07);
+}
+
+.pay-amount {
+    font-size  : 18px;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px #00000066;
+}
+
+@keyframes floatBar {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 780px) {
+    .payment-bar {
+        height       : 58px;
+        font-size    : 14px;
+        padding      : 0 16px;
+        border-radius: 20px;
+        width        : 65vw;
+    }
+
+    .pay-now {
+        padding  : 6px 16px;
+        font-size: 13px;
+    }
+
+    .pay-amount {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-bar {
+        height       : 58px;
+        font-size    : 14px;
+        padding      : 0 16px;
+        border-radius: 20px;
+        width        : 65vw;
+    }
+
+    .pay-now {
+        padding  : 6px 16px;
+        font-size: 13px;
+    }
+
+    .pay-amount {
+        font-size: 16px;
+    }
+}

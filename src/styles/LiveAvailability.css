@@ -1,0 +1,286 @@
+/* ===========================
+   OVERLAY MAIN
+=========================== */
+.overlay {
+  position       : fixed;
+  inset          : 0;
+  background     : rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  z-index        : 5000;
+}
+
+/* Background click closes popup */
+.overlay-bg {
+  position: absolute;
+  inset   : 0;
+  z-index : 1;
+  cursor  : pointer;
+}
+
+/* ===========================
+   MAIN POPUP CONTAINER
+=========================== */
+.popup-container {
+  width          : 95%;
+  max-width      : 550px;
+  background     : rgba(255, 255, 255, 0.92);
+  border-radius  : 18px;
+  padding        : 24px;
+  box-shadow     : 0 20px 45px rgba(0, 0, 0, 0.25);
+  animation      : slideUp 0.25s ease;
+  backdrop-filter: blur(12px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity  : 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity  : 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.calendar-header {
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : 20px;
+}
+
+.calendar-header h3 {
+  font-size  : 26px;
+  font-weight: 700;
+  color      : #222;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+  background   : white;
+  border       : 1px solid #dcdcdc;
+  padding      : 8px 12px;
+  border-radius: 10px;
+  cursor       : pointer;
+  transition   : 0.2s ease;
+  color        : rgb(0, 0, 0);
+}
+
+.nav-btn:hover {
+  background: #f0f0f0;
+}
+
+/* Close Button */
+.close-btnCalendar {
+  background   : #ff4444;
+  color        : white;
+  border       : none;
+  padding      : 8px 14px;
+  border-radius: 8px;
+  cursor       : pointer;
+  font-size    : 15px;
+  font-weight  : bold;
+  transition   : 0.2s;
+}
+
+.close-btnCalendar:hover {
+  background: #d40000;
+}
+
+
+/* ===========================
+   VENUE DROPDOWN
+=========================== */
+.popup-container select {
+  appearance   : none;
+  width        : 100%;
+  background   : #ffffff;
+  padding      : 10px 14px;
+  border-radius: 12px;
+  border       : 1px solid #ddd;
+  font-size    : 15px;
+  margin-bottom: 18px;
+  cursor       : pointer;
+  transition   : 0.2s ease;
+}
+
+.popup-container select:hover {
+  background: #f7f7f7;
+}
+
+/* ===========================
+   CALENDAR GRID
+=========================== */
+.calendar-grid {
+  display              : grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap                  : 6px;
+}
+
+/* Day Names */
+.day-name {
+  background   : #f4f5f7;
+  color        : #333;
+  padding      : 10px 0;
+  text-align   : center;
+  font-weight  : 600;
+  border-radius: 10px;
+  font-size    : 16px;
+}
+
+/* DATE BOXES */
+.day {
+  background     : #ffffff;
+  border-radius  : 14px;
+  min-height     : 35px;
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  font-size      : 17px;
+  transition     : transform 0.15s ease, background 0.2s ease;
+  cursor         : pointer;
+  border         : 1px solid #ebebeb;
+}
+
+.day:hover {
+  transform: scale(1.05);
+}
+
+/* Today's Highlight */
+.day.today {
+  border: 2px solid #f2c200 !important;
+}
+
+
+/* BOOKED = Red Gradient */
+.day.booked {
+  background: linear-gradient(135deg, #ff4d4d, #b80000) !important;
+  color     : white;
+  border    : none !important;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.25);
+}
+
+/* FREE = Soft Green */
+.day.free {
+  background: linear-gradient(135deg, #57e36e, #16c72e) !important;
+  color     : white;
+  border    : none !important;
+  box-shadow: 0 4px 12px rgba(0, 200, 0, 0.15);
+}
+
+/* ===========================
+   SMALL BOOKING POPUP
+=========================== */
+.small-popup-overlay {
+  position       : fixed;
+  inset          : 0;
+  background     : rgba(0, 0, 0, 0.45);
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  z-index        : 9999;
+}
+
+.small-popup {
+  background   : white;
+  padding      : 20px;
+  width        : 90%;
+  max-width    : 340px;
+  border-radius: 12px;
+  box-shadow   : 0 12px 30px rgba(0, 0, 0, 0.25);
+  animation    : fadeIn 0.25s ease;
+}
+
+.small-popup p {
+  margin: 0px 0px 10px 0px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity  : 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity  : 1;
+    transform: translateY(0);
+  }
+}
+
+.close-small-btn {
+  background   : #ff4747;
+  color        : white;
+  padding      : 10px;
+  border-radius: 6px;
+  width        : 100%;
+  font-weight  : bold;
+  border       : none;
+  cursor       : pointer;
+}
+
+/* ===========================
+   RESPONSIVE FIXES
+=========================== */
+
+/* TABLET */
+@media (max-width: 768px) {
+  .calendar-header h3 {
+    font-size: 18px;
+  }
+
+  .day-name {
+    font-size: 15px;
+    padding  : 6px 0;
+  }
+
+  .day {
+    min-height: 45px;
+    font-size : 18px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .calendar-grid {
+    gap: 1px;
+  }
+
+  .popup-container {
+    padding: 12px;
+  }
+
+  .day-name {
+    font-size: 15px;
+    padding  : 4px 0;
+  }
+
+  .day {
+    min-height: 40px;
+    font-size : 15px;
+  }
+
+  .calendar-header {
+    gap: 8px;
+  }
+
+  .calendar-header h3 {
+    font-size: 16px;
+  }
+}
+
+/* Disable all main popup when small popup is open */
+.disable-main .popup-container {
+  pointer-events: none !important;
+  opacity       : 0.35;
+}
+
+.disable-main .overlay-bg {
+  pointer-events: none !important;
+}
