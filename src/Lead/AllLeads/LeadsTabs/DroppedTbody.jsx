@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LogPopupCell from "../../../Book/AllLeads/LogPopupCell";
 
 const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldChange, handleEdit, handleDateChange, startEdit, moveLeadToDrop, handlePrint }) => {
     const [localValue, setLocalValue] = useState({});
@@ -503,6 +504,9 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldC
                         </td>
 
                         <td> <button onClick={() => sendToUpdate(lead)} style={{ backgroundColor: "#2e76cc", color: "#fff", border: "none", padding: "10px 15px", borderRadius: "4px" }}> Update </button> </td>
+                        <td style={{ textAlign: "center" }}>
+                            <LogPopupCell lead={lead} />
+                        </td>
                         <td> <button onClick={() => sendToBookings(lead)} style={{ backgroundColor: "#2ecc71", color: "#fff", border: "none", padding: "10px 15px", borderRadius: "4px", whiteSpace: 'nowrap' }}> Book Now </button> </td>
                         <td> <button onClick={() => handlePrint(lead)} style={{ backgroundColor: "#00725c", color: "#fff", border: "none", padding: "10px 15px", borderRadius: "4px" }}> Print </button> </td>
 

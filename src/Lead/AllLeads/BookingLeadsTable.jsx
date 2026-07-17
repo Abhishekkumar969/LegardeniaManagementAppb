@@ -1403,6 +1403,16 @@ Grand Total: ₹${lead.grandTotal || 0}
         }
     };
 
+    const autoRefreshDone = useRef(false);
+
+    useEffect(() => {
+        if (leads.length > 0 && !autoRefreshDone.current) {
+            autoRefreshDone.current = true;
+            handleRefreshPastBookingLeads();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [leads]);
+
     return (
         <>
             <div className="leads-table-container">

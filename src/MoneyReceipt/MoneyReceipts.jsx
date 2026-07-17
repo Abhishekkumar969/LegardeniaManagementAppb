@@ -26,7 +26,6 @@ export const formatIST = (date, withTime = false) => {
 
   return new Date(date).toLocaleString("en-GB", options);
 };
-
 export const getInitials = (name) => {
   if (!name) return "";
   return name.split(/[\s-]+/).filter(Boolean).map(word => word.charAt(0).toUpperCase()).join('');
@@ -1676,4 +1675,4 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
   );
 };
 
-export default MoneyReceipts;
+export default MoneyReceipts; 

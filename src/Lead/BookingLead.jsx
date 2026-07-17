@@ -277,11 +277,20 @@ const BookingLead = () => {
                     };
                 }
 
-                await setDoc(
-                    monthDocRef,
-                    { [docId]: docToSet },
-                    { merge: true }
-                );
+                const updatePayload = {};
+                Object.keys(docToSet).forEach(key => {
+                    updatePayload[`${docId}.${key}`] = docToSet[key];
+                });
+
+                try {
+                    await updateDoc(monthDocRef, updatePayload);
+                } catch (error) {
+                    await setDoc(
+                        monthDocRef,
+                        { [docId]: docToSet },
+                        { merge: true }
+                    );
+                }
 
                 if (oldMonthYear !== monthYear) {
                     const oldMonthRef = doc(db, "bookingLeads", oldMonthYear);
