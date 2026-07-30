@@ -393,7 +393,7 @@ const UserAccessPanel = () => {
         Receipts: [
             { label: "Receipt", key: "Receipt", color: "#f49fd1", textColor: getTextColor("#e33adb") },
             { label: "Voucher", key: "Voucher", color: "#f49fd1", textColor: getTextColor("#f062c0") },
-            { label: "Record", key: "Record", color: "#f49fd1", textColor: getTextColor("#f49fd1") },
+            // { label: "Record", key: "Record", color: "#f49fd1", textColor: getTextColor("#f49fd1") },
             { label: "Record Stats", key: "RecordStats", color: "#f49fd1", textColor: getTextColor("#f49fd1") },
             { label: "Receipt Approve", key: "Approve", color: "#f49fd1", textColor: getTextColor("#f7c3e0") },
         ],

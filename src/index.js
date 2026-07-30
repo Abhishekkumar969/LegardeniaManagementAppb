@@ -15,7 +15,7 @@ async function bootstrap() {
 
     // ✅ ONLY TRUE ALLOWED
     if (!snap.exists() || snap.data()?.power !== true) {
-      window.location.replace("https://gardle.netlify.app/");
+      window.location.replace("https://nfeednews.netlify.app/");
       return;
     }
 

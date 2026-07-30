@@ -2,29 +2,29 @@
     max-height: 75vh;
     overflow-y: auto;
     overflow-x: auto;
-    position  : relative;
+    position: relative;
 }
 
 .leads-table {
     border-collapse: collapse;
-    width          : 100%;
+    width: 100%;
 }
 
 .leads-table th,
 .leads-table td {
     white-space: nowrap;
-    padding    : 8px 12px;
+    padding: 8px 12px;
 }
 
 .leads-table td {
     white-space: nowrap;
-    padding    : 5px !important;
+    padding: 5px !important;
 }
 
 .leads-table thead th {
     position: sticky;
-    top     : 0;
-    z-index : 1;
+    top: 0;
+    z-index: 1;
 }
 
 
@@ -42,31 +42,31 @@
     max-height: 75vh;
     overflow-y: auto !important;
     overflow-x: auto !important;
-    position  : relative;
+    position: relative;
 }
 
 .leads-table thead th {
-    position     : sticky !important;
-    top          : 0;
-    z-index      : 1 !important;
+    position: sticky !important;
+    top: 0;
+    z-index: 1 !important;
     /* background: linear-gradient(180deg, #2e6999, #62b2f4); */
 }
 
 /* WRAPPER */
 .table-fixed-wrapper {
-    height    : fit-content;
+    height: fit-content;
     max-height: 75vh;
     overflow-y: auto;
     overflow-x: auto;
-    position  : relative;
+    position: relative;
 }
 
 /* BASE TABLE */
 .leads-table {
     border-collapse: separate;
     /* IMPORTANT */
-    border-spacing : 0;
-    width          : 100%;
+    border-spacing: 0;
+    width: 100%;
 }
 
 .leads-table th,
@@ -77,10 +77,10 @@
 
 /* 2️⃣ FREEZE FIRST COLUMN (BODY) HORIZONTALLY */
 .leads-table td:first-child {
-    position       : sticky;
-    left           : 0;
+    position: sticky;
+    left: 0;
     /* border-right: 1px solid #ccc; */
-    padding        : 0px 3px !important;
+    padding: 0px 3px !important;
 }
 
 
@@ -88,9 +88,9 @@
 /* 3️⃣ FREEZE FIRST HEADER COLUMN (Sl.) BOTH DIRECTIONS */
 .leads-table thead th:first-child {
     /* position: fixed; */
-    left      : 0;
-    z-index   : 999 !important;
-    top       : 0;
+    left: 0;
+    z-index: 999 !important;
+    top: 0;
     /* HIGHEST */
     /* color  : white; */
 }
@@ -98,11 +98,11 @@
 /* Freeze first column */
 .leads-table th:first-child,
 .leads-table td:first-child {
-    position     : sticky;
-    left         : 0;
-    width        : fit-content;
+    position: sticky;
+    left: 0;
+    width: fit-content;
     /* color     : white !important; */
-    text-align   : center;
+    text-align: center;
 }
 
 /* Header should stay above rows */
@@ -115,17 +115,17 @@
 }
 
 .leads-table td:first-child {
-    text-align    : center;
-    font-weight   : bold;
+    text-align: center;
+    font-weight: bold;
     /* background : linear-gradient(127deg, #2e6999, #62b2f4); */
 }
 
 /* 1️⃣ FREEZE HEADER VERTICALLY */
 .leads-table thead th {
     position: sticky;
-    padding : 5px 13px !important;
-    top     : 0;
-    z-index : 3;
+    padding: 5px 13px !important;
+    top: 0;
+    z-index: 3;
 }
 
 .leads-table thead td {
@@ -137,24 +137,24 @@
     /* 1️⃣ SL */
     .leads-table th:nth-child(1),
     .leads-table td:nth-child(1) {
-        position : sticky;
-        left     : 0;
+        position: sticky;
+        left: 0;
         min-width: 50px;
     }
 
     /* 2️⃣ DATE */
     .leads-table th:nth-child(2),
     .leads-table td:nth-child(2) {
-        position : sticky;
-        left     : 50px;
+        position: sticky;
+        left: 50px;
         min-width: 110px;
     }
 
     /* 3️⃣ NAME / BANQUET */
     .leads-table th:nth-child(3),
     .leads-table td:nth-child(3) {
-        position : sticky;
-        left     : 160px;
+        position: sticky;
+        left: 160px;
         /* 50 + 110 */
         min-width: 245px;
     }
@@ -162,8 +162,8 @@
     /* 4️⃣ RECEIPT DATE */
     .leads-table th:nth-child(4),
     .leads-table td:nth-child(4) {
-        position : sticky;
-        left     : 405px;
+        position: sticky;
+        left: 405px;
         /* 160 + 245 */
         min-width: 120px;
     }
@@ -171,19 +171,19 @@
     /* 5️⃣ AMOUNT */
     .leads-table th:nth-child(5),
     .leads-table td:nth-child(5) {
-        position  : sticky;
-        left      : 525px;
+        position: sticky;
+        left: 525px;
         /* 405 + 120 */
-        min-width : fit-content;
+        min-width: fit-content;
         text-align: left;
-        padding   : 0px !important;
-        margin    : 0px !important;
+        /* padding   : 0px !important; */
+        margin: 0px !important;
 
     }
 
     /* 🔝 HEADER ON TOP */
     .leads-table thead th:nth-child(-n+5) {
-        z-index   : 99 !important;
+        z-index: 99 !important;
         background: #3773a5;
     }
 }
@@ -193,4 +193,3 @@
         padding: 5px 15px !important;
     }
 }
-

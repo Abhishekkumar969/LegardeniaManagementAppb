@@ -61,6 +61,7 @@ import VendorLedger from './Ledger/VendorLedger';
 
 import Inventory from "./components/Inventory";
 import DownloadEveryThing from "./Download/DownloadEveryThing";
+import ImportData from "./Download/ImportData";
 import EventTasks from "./components/EventTasks";
 
 export default function AppRoutes() {
@@ -180,6 +181,7 @@ export default function AppRoutes() {
 
                 <Route path="/Inventory" element={<PrivateRoute><Inventory /></PrivateRoute>} />
                 <Route path="/DownloadEveryThing" element={<PrivateRoute><DownloadEveryThing /></PrivateRoute>} />
+                <Route path="/ImportData" element={<PrivateRoute><ImportData /></PrivateRoute>} />
                 <Route path="/EventTasks" element={<PrivateRoute><EventTasks /></PrivateRoute>} />
 
                 <Route path="/login" element={<LoginPage />} />
