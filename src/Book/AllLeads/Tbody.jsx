@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LogPopupCell from './LogPopupCell';
 import { Timestamp } from "firebase/firestore";
 
-const Tbody = ({ leads, totalItems, startIndex, isEditing, handleFieldChange, startEdit, handleMultipleBookingClick, duplicateMobileSet, sendToRating, sendToPrintPayment, moveLeadToDrop, sendToPrint, userPermissions, sortConfig, openExpenseModal, sendToPrintAllMeals, handleToggleView, viewSettings }) => {
+const Tbody = ({ leads, totalItems, startIndex, isEditing, handleFieldChange, startEdit, handleMultipleBookingClick, duplicateMobileSet, sendToRating, sendToPrintPayment, moveLeadToDrop, sendToPrint, userPermissions, sortConfig, openExpenseModal, sendToPrintAllMeals, handleToggleView, viewSettings, handleShareMedia }) => {
     const [localValue, setLocalValue] = useState({});
     const navigate = useNavigate();
     const [selectedAdvances, setSelectedAdvances] = useState(null);
@@ -263,18 +263,22 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, handleFieldChange, st
                                 </td>
                             ))}
 
-                            {/* print button */}
+                            {/* Action column (Print & Edit) */}
                             <td style={{ backgroundColor: userPermissions.venueTypeColors?.[lead.venueType] || "white" }}>
-                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div style={{ display: "flex", gap: "5px", justifyContent: "center", alignItems: "center" }}>
                                     <button
                                         onClick={() => setPrintPopup({ open: true, lead })}
                                         className="printBtnMeal"
                                     >
                                         🖨️
                                     </button>
+                                    {canEdit(lead.id) && (
+                                        <button onClick={() => sendToBookings(lead)} className="printBtnMeal">
+                                            <div style={{ fontSize: '21px' }} >✏️</div>
+                                        </button>
+                                    )}
                                 </div>
                             </td>
-
                             {['functionDate'].map((field) => (
                                 <>
                                     {field === 'functionDate' && (
@@ -920,16 +924,6 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, handleFieldChange, st
                                 </td>
                             ))}
 
-                            {/* edit buttons */}
-                            <td>
-                                {canEdit(lead.id) ? (
-                                    <button onClick={() => sendToBookings(lead)} className="printBtnMeal">
-                                        <div style={{ fontSize: '21px' }} >✏️</div>
-                                    </button>) : (
-                                    ''
-                                )}
-                            </td>
-
                             <td> <LogPopupCell lead={lead} /> </td>
 
                             <td>
@@ -995,6 +989,65 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, handleFieldChange, st
                                 >
                                     ⭐ Rating
                                 </button>
+                            </td>
+
+                            {/* Share Media */}
+                            <td>
+                                <div style={{ height: "max-content", textAlign: "center" }}>
+                                    <button
+                                        onClick={() => handleShareMedia(lead)}
+                                        className="btn-add-expense printBtnMeal"
+                                        style={{
+                                            backgroundColor: "#2196F3",
+                                            color: "white",
+                                            borderRadius: "4px",
+                                            fontSize: "14px",
+                                            padding: "10px 15px",
+                                            margin: "0px auto"
+                                        }}
+                                    >
+                                        Share Media
+                                    </button>
+
+                                    <div style={{ color: lead.shareMedia?.shareMedia ? "green" : "red", fontSize: "12px", marginTop: "5px" }}>
+                                        {lead.shareMedia?.shareMedia ? (
+                                            <div>
+                                                <strong>Media Shared</strong>
+                                                {lead.shareMedia?.at && (
+                                                    <div style={{ color: "#555", fontSize: "11px" }}>
+                                                        {(() => {
+                                                            try {
+                                                                const raw = lead.shareMedia.at.trim();
+                                                                const match = raw.match(
+                                                                    /(\d{2})[/-](\d{2})[/-](\d{4}),?\s*(\d{2}):(\d{2}):?(\d{2})?/
+                                                                );
+                                                                if (!match) return `🕒 at ${raw}`;
+                                                                const [, day, month, year, hour, minute, second] = match.map(Number);
+                                                                const utcDate = new Date(Date.UTC(year, month - 1, day, hour - 5, minute - 30, second || 0));
+                                                                const options = {
+                                                                    timeZone: "Asia/Kolkata",
+                                                                    day: "2-digit",
+                                                                    month: "2-digit",
+                                                                    year: "numeric",
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                    hour12: true,
+                                                                };
+                                                                const formattedIST = new Intl.DateTimeFormat("en-IN", options).format(utcDate);
+                                                                return <>🕒 {formattedIST}</>;
+                                                            } catch (err) {
+                                                                console.error("IST Parse Error:", err);
+                                                                return `🕒 at ${lead.shareMedia.at}`;
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div>Media Not Shared</div>
+                                        )}
+                                    </div>
+                                </div>
                             </td>
 
                             {['note'].map(field => (

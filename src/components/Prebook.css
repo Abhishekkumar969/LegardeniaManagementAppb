@@ -752,14 +752,14 @@ section,
     left            : 0;
     right           : 0;
     width           : 100%;
-    height          : 60px;
+    height          : calc(60px + env(safe-area-inset-bottom));
     display         : flex;
     justify-content : space-around;
     align-items     : center;
     background-color: #ffffff;
     box-shadow      : 0 -4px 12px rgba(0, 0, 0, 0.1);
     z-index         : 1000;
-    padding         : 0 5px;
+    padding         : 0 5px env(safe-area-inset-bottom) 5px;
 }
 
 .nav-item {

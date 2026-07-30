@@ -22,6 +22,8 @@ const MoneyReceipt = () => {
     const [receiver, setReceiver] = useState('');
     const [description, setDescription] = useState("");
     const [cashTo, setCashTo] = useState("Cash");
+    const [bankMode, setBankMode] = useState("RTGS/NEFT");
+    const [chequeNo, setChequeNo] = useState("");
     const [activeSource, setActiveSource] = useState("prebookings");
     const navigate = useNavigate();
     const [assignedUsers, setAssignedUsers] = useState([]);
@@ -287,22 +289,22 @@ const MoneyReceipt = () => {
             const gstBase = Number(selectedCustomer.gstBase || 0);
             const gstAmount = Number(selectedCustomer.gstAmount || 0);
             const grandTotal = Number(selectedCustomer.grandTotal || selectedCustomer.totalAmount || 0);
-            
+
             const projectedBank = gstBase + gstAmount;
             const projectedCash = grandTotal - projectedBank;
-            
+
             const receivedBank = previousPayments
                 .filter(p => p.mode !== 'Cash')
                 .reduce((sum, p) => sum + Number(p.amount || 0), 0);
             const receivedCash = previousPayments
                 .filter(p => p.mode === 'Cash')
                 .reduce((sum, p) => sum + Number(p.amount || 0), 0);
-            
+
             const remainingBank = projectedBank - receivedBank;
             const remainingCash = projectedCash - receivedCash;
-            
+
             const inputAmount = Number(amount || 0);
-            
+
             if (mode === 'Cash' && inputAmount > remainingCash) {
                 alert("Pls increase your limit to take cash payment");
                 setAmount("");
@@ -516,6 +518,8 @@ const MoneyReceipt = () => {
                 slNo,
                 manualSlNo: manualSlNo || "",
                 cashTo: mode === 'Cash' ? cashTo : '',
+                bankMode: mode !== 'Cash' ? bankMode : '',
+                chequeNo: (mode !== 'Cash' && bankMode === 'Cheque') ? chequeNo : '',
                 description,
                 myName: receiver?.trim() || "Counter",
                 partyName:
@@ -651,6 +655,8 @@ const MoneyReceipt = () => {
             setNextSlNo(null);
             setSearch('');
             setManualSlNo("");
+            setBankMode("RTGS/NEFT");
+            setChequeNo("");
         }
     };
 
@@ -966,7 +972,10 @@ const MoneyReceipt = () => {
                                                                 <td style={{ color }}>
                                                                     ₹{Number(p.amount).toLocaleString("en-IN")}
                                                                 </td>
-                                                                <td style={{ color }}>{p.mode}</td>
+                                                                <td style={{ color }}>
+                                                                    {p.mode}
+                                                                    {p.bankMode ? ` (${p.bankMode}${p.chequeNo ? ` - ${p.chequeNo}` : ''})` : ''}
+                                                                </td>
                                                             </tr>
                                                         );
                                                     })}
@@ -1045,6 +1054,31 @@ const MoneyReceipt = () => {
                                             ))}
                                         </select>
                                     </div>
+                                )}
+
+                                {mode && mode !== 'Cash' && (
+                                    <>
+                                        <div className="input-row">
+                                            <label>Bank Mode</label>
+                                            <select value={bankMode} onChange={e => setBankMode(e.target.value)}>
+                                                <option value="RTGS/NEFT">RTGS/NEFT</option>
+                                                <option value="Cheque">Cheque</option>
+                                                <option value="Card">Card</option>
+                                                <option value="UPI">UPI</option>
+                                            </select>
+                                        </div>
+                                        {bankMode === 'Cheque' && (
+                                            <div className="input-row">
+                                                <label>Cheque No</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter Cheque Number"
+                                                    value={chequeNo}
+                                                    onChange={e => setChequeNo(e.target.value)}
+                                                />
+                                            </div>
+                                        )}
+                                    </>
                                 )}
 
                                 <div className="input-row">

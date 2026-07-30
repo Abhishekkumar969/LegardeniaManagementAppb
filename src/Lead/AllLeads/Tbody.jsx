@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogPopupCell from "../../Book/AllLeads/LogPopupCell";
 
-const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldChange, handleEdit, handleDateChange, startEdit, moveLeadToDrop, handlePrint, sendToPrintAllMeals, sendToPrintCombined, handleCancelEdit, formatTime12Hour, tempFollowUps, setTempFollowUps }) => {
+const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldChange, handleEdit, handleDateChange, startEdit, moveLeadToDrop, handlePrint, sendToPrintAllMeals, sendToPrintCombined, handleCancelEdit, formatTime12Hour, tempFollowUps, setTempFollowUps, handleShareMedia }) => {
     const [localValue, setLocalValue] = useState({});
     const [printPopup, setPrintPopup] = useState({
         open: false,
@@ -198,12 +198,18 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldC
                         <td className={getColumnColorClass(lead.winProbability)}> {lead.enquiryDate ? formatDate(lead.enquiryDate) : '-'} </td>
 
                         <td className={getColumnColorClass(lead.winProbability)}>
-                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <div style={{ display: "flex", gap: "5px", justifyContent: "center", alignItems: "center" }}>
                                 <button
                                     onClick={() => setPrintPopup({ open: true, lead })}
                                     className="printBtnMeal"
                                 >
                                     🖨️
+                                </button>
+                                <button
+                                    onClick={() => sendToUpdate(lead)}
+                                    className="printBtnMeal"
+                                >
+                                    <div style={{ fontSize: '21px' }} >✏️</div>
                                 </button>
                             </div>
                         </td>
@@ -524,15 +530,7 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldC
                                 : '-'}
                         </td>
 
-                        {/* edit buttons */}
-                        <td>
-                            <button
-                                onClick={() => sendToUpdate(lead)}
-                                className="printBtnMeal"
-                            >
-                                <div style={{ fontSize: '21px' }} >✏️</div>
-                            </button>
-                        </td>
+
 
                         {/* logs btn */}
                         <td style={{ textAlign: "center" }}>
@@ -557,6 +555,65 @@ const Tbody = ({ leads, totalItems, startIndex, isEditing, editing, handleFieldC
                             >
                                 <div>Book Now</div>
                             </button>
+                        </td>
+
+                        {/* Share Media */}
+                        <td>
+                            <div style={{ height: "max-content", textAlign: "center" }}>
+                                <button
+                                    onClick={() => handleShareMedia(lead)}
+                                    className="btn-add-expense printBtnMeal"
+                                    style={{
+                                        backgroundColor: "#2196F3",
+                                        color: "white",
+                                        borderRadius: "4px",
+                                        fontSize: "14px",
+                                        padding: "10px 15px",
+                                        margin: "0px auto"
+                                    }}
+                                >
+                                    Share Media
+                                </button>
+
+                                <div style={{ color: lead.shareMedia?.shareMedia ? "green" : "red", fontSize: "12px", marginTop: "5px" }}>
+                                    {lead.shareMedia?.shareMedia ? (
+                                        <div>
+                                            <strong>Media Shared</strong>
+                                            {lead.shareMedia?.at && (
+                                                <div style={{ color: "#555", fontSize: "11px" }}>
+                                                    {(() => {
+                                                        try {
+                                                            const raw = lead.shareMedia.at.trim();
+                                                            const match = raw.match(
+                                                                /(\d{2})[/-](\d{2})[/-](\d{4}),?\s*(\d{2}):(\d{2}):?(\d{2})?/
+                                                            );
+                                                            if (!match) return `🕒 at ${raw}`;
+                                                            const [, day, month, year, hour, minute, second] = match.map(Number);
+                                                            const utcDate = new Date(Date.UTC(year, month - 1, day, hour - 5, minute - 30, second || 0));
+                                                            const options = {
+                                                                timeZone: "Asia/Kolkata",
+                                                                day: "2-digit",
+                                                                month: "2-digit",
+                                                                year: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                                hour12: true,
+                                                            };
+                                                            const formattedIST = new Intl.DateTimeFormat("en-IN", options).format(utcDate);
+                                                            return <>🕒 {formattedIST}</>;
+                                                        } catch (err) {
+                                                            console.error("IST Parse Error:", err);
+                                                            return `🕒 at ${lead.shareMedia.at}`;
+                                                        }
+                                                    })()}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div>Media Not Shared</div>
+                                    )}
+                                </div>
+                            </div>
                         </td>
 
                         <td key={`${lead.id}-bookingAmenities`}

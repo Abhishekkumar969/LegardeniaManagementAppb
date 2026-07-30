@@ -44,6 +44,22 @@ const BookingLeadsTable = () => {
         EventAutoViewNumber: false,
         DecorationAutoViewNumber: false
     });
+    const [whatsappTemplate, setWhatsappTemplate] = useState("");
+
+    useEffect(() => {
+        const fetchTemplate = async () => {
+            try {
+                const ref = doc(db, "whatsappMessages", "Enquiry");
+                const snap = await getDoc(ref);
+                if (snap.exists()) {
+                    setWhatsappTemplate(snap.data().text || "");
+                }
+            } catch (e) {
+                console.error("WhatsApp template fetch failed", e);
+            }
+        };
+        fetchTemplate();
+    }, []);
 
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "settings", "viewSettings"), (docSnap) => {
@@ -601,6 +617,106 @@ const BookingLeadsTable = () => {
             setFilteredLeads(prev => prev.map(lead =>
                 lead.id === id ? { ...lead, [field]: lead[field] } : lead
             ));
+        }
+    };
+
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '-';
+
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return '-';
+
+        // Convert UTC → IST (add 5 hours 30 minutes)
+        const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+        const ist = new Date(utc + 5.5 * 60 * 60 * 1000);
+
+        const day = String(ist.getDate()).padStart(2, "0");
+        const month = String(ist.getMonth() + 1).padStart(2, "0");
+        const year = ist.getFullYear();
+
+        return `${day}/${month}/${year}`; // DD-MM-YYYY
+    };
+
+    const buildWhatsappMessage = (lead) => {
+        if (!whatsappTemplate) return "";
+
+        let msg = whatsappTemplate
+            .replace("{name}", lead.name || "")
+            .replace("{functionDate}", lead.functionDate ? formatDate(lead.functionDate) : "-")
+            .replace("{pax}", lead.pax || lead.paxCount || "")
+            .replace("{functionType}", lead.functionType || "")
+            .replace("{dayNight}", lead.dayNight || "");
+
+        // 🧨 REMOVE ONLY "Guest Name" (anywhere, any greeting)
+        msg = msg
+            .replace(/\bguest\s+name\b/gi, "")
+            .replace(/\s{2,}/g, " ")     // extra spaces
+            .replace(/,\s*,/g, ",")      // double commas
+            .replace(/^,\s*/g, "")       // leading comma
+            .trim();
+
+        return msg;
+    };
+
+    const handleShareMedia = async (lead) => {
+        if (!lead.mobile1) {
+            alert("No mobile number available to share the link.");
+            return;
+        }
+
+        const message = buildWhatsappMessage(lead);
+
+        if (!message.trim()) {
+            alert("WhatsApp template not found or is empty.");
+            return;
+        }
+
+        let phone = lead.mobile1.trim().replace(/\D/g, "");
+        if (!phone.startsWith("91")) {
+            phone = phone.length === 10 ? "91" + phone : "91" + phone;
+        }
+
+        // open WhatsApp
+        const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+
+        try {
+            // --- Get precise IST components using Intl ---
+            const now = new Date();
+            const parts = new Intl.DateTimeFormat("en-GB", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+            }).formatToParts(now);
+
+            const map = {};
+            for (const p of parts) {
+                if (p.type !== "literal") map[p.type] = p.value;
+            }
+
+            const day = map.day;
+            const month = map.month;
+            const year = map.year;
+            const hour = map.hour;
+            const minute = map.minute;
+            const second = map.second || "00";
+
+            const displayIST = `${day}-${month}-${year}, ${hour}:${minute}:${second} IST`;
+
+            // Call handleFieldChange to save to Firestore and update local state
+            await handleFieldChange(lead.id, "shareMedia", {
+                shareMedia: true,
+                at: displayIST,
+            });
+
+            console.log("✅ shareMedia updated (IST):", displayIST);
+        } catch (error) {
+            console.error("❌ Failed to update shareMedia:", error);
         }
     };
 
@@ -2929,7 +3045,7 @@ ${customMenuCharges}
                                     Booked On {sortConfig.key === 'enquiryDate' ? (sortConfig.direction === 'asc' ? "▲" : "▼") : ''}
                                 </th>
 
-                                {['Prints', 'Month', 'Venue type', 'Event', 'Day/Night', 'Start Time',
+                                {['Action', 'Month', 'Venue type', 'Event', 'Day/Night', 'Start Time',
                                     'Finish Time', 'Contact Number', 'Hall Charges'
                                 ].map(header => (
                                     <th key={header}>{header}</th>
@@ -3029,12 +3145,12 @@ ${customMenuCharges}
                                     </>
                                 )}
 
-                                {['Source', 'Edit', 'Logs'
+                                {['Source', 'Logs'
                                 ].map(header => (
                                     <th style={{ textAlign: "center" }} key={header}>{header}</th>
                                 ))}
 
-                                {['Add Expense', 'Print Settlement', '⭐Rating', 'Note...',
+                                {['Add Expense', 'Print Settlement', '⭐Rating', 'Share Media', 'Note...',
                                     'Total Refund', 'Chargeable Items', 'Custom Menu Items',
                                     'Complimentary Items', ' Event Booked By'
 
@@ -3080,6 +3196,7 @@ ${customMenuCharges}
                             handleMultipleBookingClick={handleMultipleBookingClick}
                             handleToggleView={handleToggleView}
                             viewSettings={viewSettings}
+                            handleShareMedia={handleShareMedia}
                         />
                     </table>
 

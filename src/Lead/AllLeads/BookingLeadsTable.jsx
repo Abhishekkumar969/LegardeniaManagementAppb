@@ -23,6 +23,7 @@ const BookingLeadsTable = () => {
     const [availableFY, setAvailableFY] = useState([]);
     const [tempFollowUps, setTempFollowUps] = useState({});
     const [currentUserName, setCurrentUserName] = useState("");
+    const [whatsappTemplate, setWhatsappTemplate] = useState("");
 
     useEffect(() => {
         const auth = getAuth();
@@ -31,6 +32,21 @@ const BookingLeadsTable = () => {
         if (user) {
             setCurrentUserName(user.displayName || user.email || "Unknown");
         }
+    }, []);
+
+    useEffect(() => {
+        const fetchTemplate = async () => {
+            try {
+                const ref = doc(db, "whatsappMessages", "Enquiry");
+                const snap = await getDoc(ref);
+                if (snap.exists()) {
+                    setWhatsappTemplate(snap.data().text || "");
+                }
+            } catch (e) {
+                console.error("WhatsApp template fetch failed", e);
+            }
+        };
+        fetchTemplate();
     }, []);
 
     const getCurrentFinancialYear = () => {
@@ -1292,6 +1308,89 @@ Grand Total: ₹${lead.grandTotal || 0}
         return `${day}/${month}/${year}`; // DD-MM-YYYY
     };
 
+    const buildWhatsappMessage = (lead) => {
+        if (!whatsappTemplate) return "";
+
+        let msg = whatsappTemplate
+            .replace("{name}", lead.name || "")
+            .replace("{functionDate}", lead.functionDate ? formatDate(lead.functionDate) : "-")
+            .replace("{pax}", lead.pax || lead.paxCount || "")
+            .replace("{functionType}", lead.functionType || "")
+            .replace("{dayNight}", lead.dayNight || "");
+
+        // 🧨 REMOVE ONLY "Guest Name" (anywhere, any greeting)
+        msg = msg
+            .replace(/\bguest\s+name\b/gi, "")
+            .replace(/\s{2,}/g, " ")     // extra spaces
+            .replace(/,\s*,/g, ",")      // double commas
+            .replace(/^,\s*/g, "")       // leading comma
+            .trim();
+
+        return msg;
+    };
+
+    const handleShareMedia = async (lead) => {
+        if (!lead.mobile1) {
+            alert("No mobile number available to share the link.");
+            return;
+        }
+
+        const message = buildWhatsappMessage(lead);
+
+        if (!message.trim()) {
+            alert("WhatsApp template not found or is empty.");
+            return;
+        }
+
+        let phone = lead.mobile1.trim().replace(/\D/g, "");
+        if (!phone.startsWith("91")) {
+            phone = phone.length === 10 ? "91" + phone : "91" + phone;
+        }
+
+        // open WhatsApp
+        const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+
+        try {
+            // --- Get precise IST components using Intl ---
+            const now = new Date();
+            const parts = new Intl.DateTimeFormat("en-GB", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+            }).formatToParts(now);
+
+            const map = {};
+            for (const p of parts) {
+                if (p.type !== "literal") map[p.type] = p.value;
+            }
+
+            const day = map.day;
+            const month = map.month;
+            const year = map.year;
+            const hour = map.hour;
+            const minute = map.minute;
+            const second = map.second || "00";
+
+            const displayIST = `${day}-${month}-${year}, ${hour}:${minute}:${second} IST`;
+
+            // Call handleFieldChange to save to Firestore and update local state
+            await handleFieldChange(lead.id, "shareMedia", {
+                shareMedia: true,
+                at: displayIST,
+            });
+
+            console.log("✅ shareMedia updated (IST):", displayIST);
+        } catch (error) {
+            console.error("❌ Failed to update shareMedia:", error);
+        }
+    };
+
     useEffect(() => {
         if (leads.length > 0) {
             const fyList = leads.map(l => {
@@ -1592,9 +1691,9 @@ Grand Total: ₹${lead.grandTotal || 0}
                                 </th>
 
                                 {[
-                                    'Print', 'Month', 'Event', 'Day/Night', 'Venue Type', 'Contact Number',
-                                    'Menu', 'Meal', 'Hall Charges', 'GST', 'Applicable GST', 'Grand Total', 'Edit', 'Logs',
-                                    'Send to Bookings', 'Extra Booking Amenities', 'Notes', 'Win Probability', 'Hold Up Date',
+                                    'Action', 'Month', 'Event', 'Day/Night', 'Venue Type', 'Contact Number',
+                                    'Menu', 'Meal', 'Hall Charges', 'GST', 'Applicable GST', 'Grand Total', 'Logs',
+                                    'Send to Bookings', 'Share Media', 'Extra Booking Amenities', 'Notes', 'Win Probability', 'Hold Up Date',
                                     'Follow Up Date 1', 'Follow Up Date 2', 'Follow Up Date 3', 'Follow Up Date 4',
                                     'Follow Up Date 5', 'Follow Up Date 6', 'Follow Up Date 7', 'Follow Up Date 8', 'Follow Up Date 9', 'Follow Up Date 10',
                                     'Source Of Customer', "Booked By",
@@ -1622,6 +1721,7 @@ Grand Total: ₹${lead.grandTotal || 0}
                             formatTime12Hour={formatTime12Hour}
                             tempFollowUps={tempFollowUps}
                             setTempFollowUps={setTempFollowUps}
+                            handleShareMedia={handleShareMedia}
                         />
                     </table>
 

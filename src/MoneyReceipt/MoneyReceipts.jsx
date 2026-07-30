@@ -26,6 +26,7 @@ export const formatIST = (date, withTime = false) => {
 
   return new Date(date).toLocaleString("en-GB", options);
 };
+
 export const getInitials = (name) => {
   if (!name) return "";
   return name.split(/[\s-]+/).filter(Boolean).map(word => word.charAt(0).toUpperCase()).join('');
@@ -573,19 +574,25 @@ const MoneyReceipts = () => {
 
     <div class="payment-row">
       <!-- LEFT PAYMENT MODE TABLE -->
-      <table class="payment-table">
-        <tr><th colspan="2">Payment Mode</th></tr>
-        <tr>
-          <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
-          <td className="italic">
-${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
-          </td>
-        </tr>
-        <tr>
-          <td class="italic ">${receipt.mode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
-          <td class="italic ">${receipt.mode === 'Card' ? '☑️ Card' : 'Card'}</td>
-        </tr>
-      </table>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <table class="payment-table">
+          <tr><th colspan="2">Payment Mode</th></tr>
+          <tr>
+            <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+            <td className="italic">
+${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+            </td>
+          </tr>
+          <tr>
+            <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+            <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+          </tr>
+        </table>
+        ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+      </div>
 
       <!-- MIDDLE ₹ SYMBOL + AMOUNT IN BOX -->
       <div class="rs-combo">
@@ -625,7 +632,7 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
       iframe.contentWindow.focus();
       iframe.contentWindow.print();
     };
-  }, [bankNames]);
+  }, []);
 
   const handlePrintCash = useCallback(async (receipt) => {
 
@@ -788,19 +795,25 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
 
     <div class="payment-row">
       <!-- LEFT PAYMENT MODE TABLE -->
-      <table class="payment-table">
-        <tr><th colspan="2">Payment Mode</th></tr>
-        <tr>
-          <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
-          <td className="italic">
-${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
-          </td>        
-        </tr>
-        <tr>
-          <td class="italic ">${receipt.mode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
-          <td class="italic ">${receipt.mode === 'Card' ? '☑️ Card' : 'Card'}</td>
-        </tr>
-      </table>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <table class="payment-table">
+          <tr><th colspan="2">Payment Mode</th></tr>
+          <tr>
+            <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+            <td className="italic">
+              ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+            </td>        
+          </tr>
+          <tr>
+            <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+            <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+          </tr>
+        </table>
+        ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+      </div>
 
       <!-- MIDDLE ₹ SYMBOL + AMOUNT IN BOX -->
       <div class="rs-combo">
@@ -839,7 +852,7 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
       iframe.contentWindow.print();
     };
 
-  }, [bankNames, getReceiptRankText]);
+  }, [getReceiptRankText]);
 
   const handlePrintOther = useCallback(async (receipt) => {
 
@@ -986,19 +999,25 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
 
         <div class="payment-row">
           <!-- LEFT TABLE -->
-          <table class="payment-table">
-            <tr><th colspan="2">Payment Mode</th></tr>
-            <tr>
-              <td class="italic">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
-              <td className="italic">
-${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
-             </td>            
-          </tr>
-            <tr>
-              <td class="italic">${receipt.mode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
-              <td class="italic">${receipt.mode === 'Card' ? '☑️ Card' : 'Card'}</td>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <table class="payment-table">
+              <tr><th colspan="2">Payment Mode</th></tr>
+              <tr>
+                <td class="italic">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+                <td className="italic">
+${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+               </td>            
             </tr>
-          </table>
+              <tr>
+                <td class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+                <td class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+              </tr>
+            </table>
+            ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+          </div>
 
           <!-- MIDDLE ₹ SYMBOL + AMOUNT -->
           <div class="rs-combo">
@@ -1037,7 +1056,7 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
       iframe.contentWindow.print();
     };
 
-  }, [bankNames]);
+  }, []);
 
   useEffect(() => {
     const receipt = location.state?.printReceipt;
@@ -1195,7 +1214,10 @@ ${bankNames.includes(receipt.mode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
             </button>
           </td>
 
-          <td style={{ backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>{r.mode || ""}</td>
+          <td style={{ backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>
+            {r.mode || ""}
+            {r.bankMode ? ` (${r.bankMode}${r.chequeNo ? ` - ${r.chequeNo}` : ''})` : ''}
+          </td>
           <td style={{ backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>{r.cashTo || ""}</td>
 
           <td style={{ fontWeight: "bold", backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", width: "fit-content", }}>#{r.slNo}</td>

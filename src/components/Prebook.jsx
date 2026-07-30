@@ -13,12 +13,12 @@ import {
   FaCalendarAlt, FaEnvelopeOpenText, FaRocket, FaClipboardCheck,
   FaFolderOpen, FaTrashAlt, FaReceipt, FaTicketAlt,
   FaCheckCircle, FaMoneyBillWave, FaWhatsapp, FaUtensils,
-  FaChartLine, FaListAlt, FaUserShield,
+  FaChartLine, FaListAlt, FaUserShield, FaUpload,
   FaUserTie, FaChevronUp, FaChevronDown, FaFileInvoiceDollar, FaDatabase,
   FaUserPlus, FaUserTimes, FaFileInvoice, FaTruck, FaCalendarCheck, FaMagic, FaBoxes, FaClipboardList, FaFileSignature, FaTasks
 } from "react-icons/fa";
 
-import { FiPrinter } from "react-icons/fi";
+// import { FiPrinter } from "react-icons/fi";
 import { IoIosLogOut } from "react-icons/io";
 import { IoCloudOfflineOutline } from "react-icons/io5";
 
@@ -150,10 +150,16 @@ const Prebook = () => {
 
   const togglePower = async () => {
     const ref = doc(db, "appControl", "appStatus");
+    const auth = getAuth();
+    const user = auth.currentUser;
 
     try {
       // 🔥 clear intent: FORCE OFF
-      await updateDoc(ref, { power: false });
+      await updateDoc(ref, {
+        power: false,
+        email: user?.email || "Unknown",
+        updatedAt: new Date()
+      });
 
       // ⏳ DB write ke baad redirect
       setTimeout(() => {
@@ -517,7 +523,7 @@ const Prebook = () => {
               <div className="service-grid">
                 {hasAccess("Receipts", "Receipt") && <ServiceBox label="Money Receipt" onClick={() => navigate('/MoneyReceipt')} icon={<FaReceipt />} />}
                 {hasAccess("Receipts", "Voucher") && <ServiceBox label="Voucher Receipt" onClick={() => navigate('/Receipts')} icon={<FaTicketAlt />} />}
-                {hasAccess("Receipts", "Record") && <ServiceBox label="Print Receipt" onClick={() => navigate('/MoneyReceipts')} icon={<FiPrinter />} />}
+                {/* {hasAccess("Receipts", "Record") && <ServiceBox label="Print Receipt" onClick={() => navigate('/MoneyReceipts')} icon={<FiPrinter />} />} */}
                 {hasAccess("Receipts", "RecordStats") && <ServiceBox label="Receipt Report" onClick={() => navigate('/MoneyReceiptsStats')} icon={<FaFileInvoice />} />}
                 {hasAccess("Receipts", "Approve") && (<ServiceBox label="Debit Approval" onClick={() => navigate('/ApprovalPage')} icon={<FaCheckCircle />} badge={pendingDebitCount} />)}
               </div>
@@ -739,6 +745,7 @@ const Prebook = () => {
                 {hasAccess("Settings", "Business") && <ServiceBox label="Business" onClick={() => navigate('/StatsPage')} icon={<FaChartLine />} />}
                 {hasAccess("Settings", "Access") && <ServiceBox label="Access" onClick={() => navigate('/UserAccessPanel')} icon={<FaUserShield />} />}
                 {hasAccess("Settings", "Backup") && <ServiceBox label="Backup" onClick={() => navigate('/DownloadEveryThing')} icon={<FaDatabase />} />}
+                {hasAccess("Settings", "Import") && <ServiceBox label="Import" onClick={() => navigate('/ImportData')} icon={<FaUpload />} />}
               </div>
             </div>
           ) : null}

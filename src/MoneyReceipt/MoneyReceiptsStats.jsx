@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { collection, onSnapshot, doc, updateDoc, setDoc, getDoc, getDocs, deleteField, runTransaction } from "firebase/firestore";
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { collection, onSnapshot, doc, updateDoc, setDoc, getDoc, getDocs, deleteField, runTransaction, query, where } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 import '../styles/MoneyReceipts.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { getAuth } from "firebase/auth";
@@ -13,8 +14,34 @@ import Pagination from "../components/Pagination";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
+export const formatIST = (date, withTime = false) => {
+  if (!date) return "";
+
+  const options = {
+    timeZone: "Asia/Kolkata",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  };
+
+  if (withTime) {
+    options.hour = "2-digit";
+    options.minute = "2-digit";
+  }
+
+  return new Date(date).toLocaleString("en-GB", options);
+};
+
+export const getInitials = (name) => {
+  if (!name) return "";
+  return name.split(/[\s-]+/).filter(Boolean).map(word => word.charAt(0).toUpperCase()).join('');
+};
+
 const MoneyReceipts = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+
   const [receipts, setReceipts] = useState([]);
   const [search, setSearch] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -35,6 +62,8 @@ const MoneyReceipts = () => {
   const [newManualSlNo, setNewManualSlNo] = useState("");
   const [newParticularNature, setNewParticularNature] = useState("");
   const [newMode, setNewMode] = useState("");
+  const [newBankMode, setNewBankMode] = useState("RTGS/NEFT");
+  const [newChequeNo, setNewChequeNo] = useState("");
   const [particularOptions, setParticularOptions] = useState([]);
   const [showNaturePopup, setShowNaturePopup] = useState(false);
   const [natureSearch, setNatureSearch] = useState("");
@@ -60,6 +89,782 @@ const MoneyReceipts = () => {
   const [subGroupFilter, setSubGroupFilter] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
+
+  const getDisplayName = (receipt) => {
+    return (receipt.customerPrefix || '') + ' ' +
+      (receipt.customerName || receipt.partyName || '-');
+  };
+
+  const getReceiptRankText = useCallback((receipt) => {
+    if (!receipt.mobile) return '';
+
+    const getISTDate = (dStr) => {
+      if (!dStr) return "";
+      const d = new Date(dStr);
+      if (isNaN(d.getTime())) return String(dStr).trim().substring(0, 10);
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(d);
+    };
+
+    const targetDate = getISTDate(receipt.eventDate);
+
+    const sameEventReceipts = receipts.filter(r => r.mobile === receipt.mobile && getISTDate(r.eventDate) === targetDate);
+
+    sameEventReceipts.sort((a, b) => {
+      const dateA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+      const dateB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+      return dateA - dateB;
+    });
+
+    const index = sameEventReceipts.findIndex(r => r.id === receipt.id);
+    if (index === -1) return '';
+
+    const rank = index + 1;
+    if (rank === 1) return 'New(1st)';
+    if (rank === 2) return '2nd';
+    if (rank === 3) return '3rd';
+    return `${rank}th`;
+  }, [receipts]);
+
+  const fetchVenueType = async (receipt) => {
+    if (!receipt) return "";
+    try {
+      const mobile = receipt.mobile || "";
+      const eventType = receipt.eventType || "";
+      const eventDate = receipt.eventDate || "";
+
+      const snap = await getDocs(collection(db, "prebookings"));
+      let foundVenue = "";
+
+      snap.docs.forEach(docSnap => {
+        Object.values(docSnap.data()).forEach(data => {
+          if (typeof data !== 'object' || !data) return;
+
+          let m1 = String(data.mobile1 || "").replace(/\D/g, "");
+          let m2 = String(data.mobile2 || "").replace(/\D/g, "");
+          let mobileStr = String(mobile).replace(/\D/g, "");
+
+          if (m1.length > 10) m1 = m1.slice(-10);
+          if (m2.length > 10) m2 = m2.slice(-10);
+          if (mobileStr.length > 10) mobileStr = mobileStr.slice(-10);
+
+          const mobileMatch = (mobileStr.length >= 10 && (m1 === mobileStr || m2 === mobileStr));
+
+          if (mobileMatch) {
+            const bEvent = String(data.functionType || data.eventType || "").trim().toLowerCase();
+            const rEvent = String(eventType || "").trim().toLowerCase();
+
+            const getISTDate = (dStr) => {
+              if (!dStr) return "";
+              const d = new Date(dStr);
+              if (isNaN(d.getTime())) return String(dStr).trim().substring(0, 10);
+              return new Intl.DateTimeFormat("en-GB", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+              }).format(d);
+            };
+
+            const bDate = getISTDate(data.functionDate || data.eventDate);
+            const rDate = getISTDate(eventDate);
+
+            if (bEvent === rEvent && bDate === rDate) {
+              if (data.venueType || data.venue) {
+                foundVenue = data.venueType || data.venue;
+              }
+            }
+          }
+        });
+      });
+      return foundVenue || "";
+    } catch (err) {
+      console.error("Error fetching venue type:", err);
+      return "";
+    }
+  };
+
+  const handlePrint = useCallback(async (receipt) => {
+    let firmName = "firmName";
+    let address = "address";
+    let contactNo = "contactNo";
+
+    try {
+      const q = query(collection(db, "usersAccess"), where("accessToApp", "==", "A"));
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        // Find the first document with accessToApp == "A"
+        const data = snapshot.docs[0].data();
+        firmName = data.firmName || firmName;
+        address = data.address || address;
+        contactNo = data.contactNo || contactNo;
+      }
+    } catch (err) {
+      console.error("Error fetching firm info from admin user:", err);
+    }
+
+    const partyName = getDisplayName(receipt).trim();
+    const venueType = await fetchVenueType(receipt);
+    const eventDisplay = receipt.eventType || '-';
+    // const rankText = getReceiptRankText(receipt);
+    // const rankHtml = rankText ? `<div style="position: absolute; top: 10px; left: 15px; font-weight: bold; font-size: 16px; color: maroon;">${rankText}</div>` : '';
+
+    const content = `
+    <html>
+    <head>
+      <title>Receipt - #${receipt.slNo}</title>
+      <style>
+        body {
+          font-family: 'Calibri', sans-serif;
+          color: #070162ff;
+          font-size: 20px;
+          padding: 0px;
+        }
+        .header-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 19px;
+          color: white;
+          background-color: maroon;
+          padding: 5px 15px;
+          width: fit-content;
+          margin: 0 auto;
+          border-radius: 6px;
+        }
+        .main-title {
+          text-align: center;
+          font-size: 38px;
+          font-weight: bold;
+          margin-top: 5px;
+         color: #070162ff;;
+        }
+        .sub-header {
+          text-align: center;
+          font-size: 15px;
+          margin: 1px 0;
+        }
+        .line-group {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        .section {
+          margin: 10px 0;
+          display: flex;
+          gap: 8px;
+        }
+        .underline {
+          flex-grow: 1;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 150px;
+        }
+        .short-underline {
+          display: inline-block;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 100px;
+        }
+  
+        .payment-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 30px;
+        }
+  
+        .payment-table {
+          border: 1px solid maroon;
+          border-collapse: collapse;
+          font-size: 18px;
+        }
+        .payment-table th {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+          background-color: maroon;
+          color: white;
+        }
+        .payment-table td {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+        }
+  
+        .rs-combo {
+          display: flex;
+          align-items: center;
+        }
+  
+        .circle-rs {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: transparent;
+          color: #000e3cff;
+          font-size: 30px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+  
+        .bramount-box {
+          border: 1px solid maroon;
+          border: 1px solid maroon;
+          padding: 1px 1px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 14px;
+        }
+        .amount-box {
+          border: 1px solid maroon;
+          border: 1px solid maroon;
+          padding: 6px 14px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 30px;
+        }
+  
+        .signature {
+          font-weight: bold;
+          font-size: 18px;
+          text-align: right;
+          margin-top: 20px;
+        }
+            .italic {
+      font-style: italic;
+    }
+      </style>
+    </head>
+    <body>
+     <div style="border: 1px solid maroon; padding: 1px">
+      <div style="border: 1px solid maroon; padding: 30px; position: relative;">
+      <div class="header-title">MONEY RECEIPT</div>
+    <div class="main-title">${firmName}</div>
+        <div class="sub-header">${address}</div>
+        <div class="sub-header">${contactNo}</div>
+        
+      <div class="line-group">
+        <div>No. <span>${receipt.slNo}</span></div>
+        <div>Date <span class="short-underline">${formatIST(receipt.receiptDate)}</span></div>
+      </div>
+  
+      <div class="section italic">Received with thanks from <div class="underline" style="color: maroon; font-weight: bold;"> <span style="font-weight: 800"> ${partyName} </span> </div></div>
+      <div class="section italic "><span>Mob.:</span><div class="underline" style="color: maroon; font-weight: bold;">${receipt.mobile || '-'}</div></div>
+      <div class="section italic ">a sum of Rs. <div class="underline" style="color: maroon; font-weight: bold;">₹${numberToWords(Number(receipt.amount || 0))}</div></div>
+      <div class="section italic ">
+        for event of <div class="underline" style="color: maroon; font-weight: bold;">${eventDisplay}  <span style="background-color: yellow;">
+      ${venueType ? ` - ${venueType}` : ''}
+    </span> </div>
+        <span style="margin-left:auto;">Dated <span class="short-underline" style="color: maroon; font-weight: bold;">${formatIST(receipt.eventDate)}</span></span>
+      </div>
+  
+      <div class="payment-row">
+        <!-- LEFT PAYMENT MODE TABLE -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <table class="payment-table">
+            <tr><th colspan="2">Payment Mode</th></tr>
+            <tr>
+              <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+              <td className="italic">
+  ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+              </td>
+            </tr>
+            <tr>
+              <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+              <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+            </tr>
+            <tr>
+              <td colspan="2" class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+            </tr>
+          </table>
+          ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+        </div>
+  
+        <!-- MIDDLE ₹ SYMBOL + AMOUNT IN BOX -->
+        <div class="rs-combo">
+         <div class="bramount-box"> <div class="amount-box">₹ ${Number(receipt.amount || 0).toLocaleString("en-IN", {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    })} </div> </div>
+        </div>
+  
+        <!-- RIGHT SIGNATURE -->
+        <div class="signature" style="display: flex; flex-direction: column; align-items: center; margin-top: 0px;">
+          <div style="font-size: 14px; font-weight: normal; margin-bottom: 5px;">Issued By:</div>
+          <div style="color: maroon;">${receipt.receiverd || receipt.senderd || 'Accounts Dept.'}</div>
+        </div>
+        </div>
+       </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    // Check if iframe exists, otherwise create it
+    let iframe = document.getElementById("print-frame");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.id = "print-frame";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+
+    const iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(content);
+    iframeDoc.close();
+
+
+    iframe.onload = function () {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    };
+  }, []);
+
+  const handlePrintCash = useCallback(async (receipt) => {
+
+    const partyName = getDisplayName(receipt).trim();
+
+    const venueType = await fetchVenueType(receipt);
+    const eventDisplay = receipt.eventType || '-';
+
+    const rankText = getReceiptRankText(receipt);
+    const rankHtml = rankText ? `<div style="position: absolute; top: 10px; left: 15px; font-weight: bold; font-size: 16px; color: maroon;">${rankText}</div>` : '';
+
+    const content = `
+    <html>
+    <head>
+      <title>Receipt - #${receipt.slNo}</title>
+      <style>
+        body {
+          font-family: 'Calibri', sans-serif;
+          color: #000e3cff;
+          font-size: 20px;
+          padding: 0px;
+        }
+        .header-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 19px;
+          color: white;
+          background-color: maroon;
+          padding: 5px 15px;
+          width: fit-content;
+          margin: 0 auto;
+          border-radius: 6px;
+        }
+        .main-title {
+          text-align: center;
+          font-size: 38px;
+          font-weight: bold;
+          margin-top: 5px;
+          color: maroon;
+        }
+        .sub-header {
+          text-align: center;
+          font-size: 15px;
+          margin: 1px 0;
+        }
+        .line-group {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        .section {
+          margin: 10px 0;
+          display: flex;
+          gap: 8px;
+        }
+        .underline {
+          flex-grow: 1;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 150px;
+        }
+        .short-underline {
+          display: inline-block;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 100px;
+        }
+  
+        .payment-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 30px;
+        }
+  
+        .payment-table {
+          border: 1px solid maroon;
+          border-collapse: collapse;
+          font-size: 18px;
+        }
+        .payment-table th {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+          background-color: maroon;
+          color: white;
+        }
+        .payment-table td {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+        }
+  
+        .rs-combo {
+          display: flex;
+          align-items: center;
+        }
+  
+        .circle-rs {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: transparent;
+          color: #000e3cff;
+          font-size: 30px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+  
+        .bramount-box {
+          border: 1px solid maroon;
+          border: 1px solid maroon;
+          padding: 1px 1px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 14px;
+        }
+        .amount-box {
+          border: 1px solid maroon;
+          border: 1px solid maroon;
+          padding: 6px 14px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 30px;
+        }
+  
+        .signature {
+          font-weight: bold;
+          font-size: 18px;
+          text-align: right;
+          margin-top: 20px;
+        }
+            .italic {
+      font-style: italic;
+    }
+      </style>
+    </head>
+    <body>
+     <div style="border: 1px solid maroon; padding: 1px">
+      <div style="border: 1px solid maroon; padding: 30px; position: relative;">
+      ${rankHtml}
+      <div class="header-title">MONEY RECEIPT</div>
+       
+      <div class="line-group">
+        <div>No. <span>${receipt.slNo}</span></div>
+        <div>Date <span class="short-underline">${formatIST(receipt.receiptDate)}</span></div>
+      </div>
+  
+      <div class="section italic">Received with thanks from <div class="underline" style="color: maroon; font-weight: bold;"> <span style="font-weight: 800"> ${partyName} </span></div></div>
+      <div class="section italic "><span>Mob.:</span><div class="underline" style="color: maroon; font-weight: bold;">${receipt.mobile || '-'}</div></div>
+      <div class="section italic ">a sum of Rs. <div class="underline" style="color: maroon; font-weight: bold;">₹${numberToWords(Number(receipt.amount || 0))}</div></div>
+      <div class="section italic ">
+        for event of <div class="underline" style="color: maroon; font-weight: bold;">${eventDisplay}  <span style="background-color: yellow;">
+      ${venueType ? ` - ${venueType}` : ''}
+    </span></div>
+        <span style="margin-left:auto;">Dated <span class="short-underline" style="color: maroon; font-weight: bold;">${formatIST(receipt.eventDate)}</span></span>
+      </div>
+  
+      <div class="payment-row">
+        <!-- LEFT PAYMENT MODE TABLE -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <table class="payment-table">
+            <tr><th colspan="2">Payment Mode</th></tr>
+            <tr>
+              <td class="italic ">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+              <td className="italic">
+                ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+              </td>        
+            </tr>
+            <tr>
+              <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+              <td class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+            </tr>
+            <tr>
+              <td colspan="2" class="italic ">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+            </tr>
+          </table>
+          ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+        </div>
+  
+        <!-- MIDDLE ₹ SYMBOL + AMOUNT IN BOX -->
+        <div class="rs-combo">
+         <div class="bramount-box"> <div class="amount-box">₹ ${receipt.amount !== undefined && receipt.amount !== null
+        ? receipt.amount.toLocaleString("en-IN")
+        : "-"}</div> </div>
+        </div>
+  
+        <!-- RIGHT SIGNATURE -->
+        <div class="signature" style="display: flex; flex-direction: column; align-items: center; margin-top: 0px;">
+          <div style="font-size: 14px; font-weight: normal; margin-bottom: 5px;">Issued By:</div>
+          <div style="color: maroon;">${receipt.receiverd || receipt.senderd || 'Accounts Dept.'}</div>
+        </div>
+        </div>
+       </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    let iframe = document.getElementById("print-frame");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.id = "print-frame";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+
+    const iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(content);
+    iframeDoc.close();
+
+    iframe.onload = function () {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    };
+
+  }, [getReceiptRankText]);
+
+  const handlePrintOther = useCallback(async (receipt) => {
+
+    const label = receipt.paymentFor === 'Credit' ? 'Received with thanks from' : 'Paid to';
+    const partyName = getDisplayName(receipt).trim();
+    const description = receipt.description || '-';
+    const particularNature = receipt.particularNature || '-';
+    const receiptDate = receipt.receiptDate ? formatIST(receipt.receiptDate) : '-';
+
+    // const rankText = getReceiptRankText(receipt);
+    // const rankHtml = rankText ? `<div style="position: absolute; top: 10px; left: 15px; font-weight: bold; font-size: 16px; color: maroon;">${rankText}</div>` : '';
+
+    const content = `
+  <html>
+    <head>
+      <title>Receipt #${receipt.slNo}</title>
+      <style>
+        body {
+          font-family: 'Calibri', sans-serif;
+          color: #000e3cff;
+          font-size: 20px;
+          padding: 0px;
+        }
+        .header-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 19px;
+          color: white;
+          background-color: maroon;
+          padding: 5px 15px;
+          width: fit-content;
+          margin: 0 auto;
+          border-radius: 6px;
+        }
+        .main-title {
+          text-align: center;
+          font-size: 38px;
+          font-weight: bold;
+          margin-top: 5px;
+          color: #000e3cff;
+        }
+        .sub-header {
+          text-align: center;
+          font-size: 15px;
+          margin: 1px 0;
+        }
+        .section {
+          margin: 10px 0;
+          display: flex;
+          gap: 8px;
+          font-size: 18px;
+        }
+        .underline {
+          flex-grow: 1;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 150px;
+        }
+        .short-underline {
+          display: inline-block;
+          border-bottom: 1px dotted #000e3cff;
+          min-width: 100px;
+        }
+        .italic {
+          font-style: italic;
+        }
+        .payment-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 30px;
+        }
+        .payment-table {
+          border: 1px solid maroon;
+          border-collapse: collapse;
+          font-size: 18px;
+        }
+        .payment-table th {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+          background-color: maroon;
+          color: white;
+        }
+        .payment-table td {
+          border: 1px solid maroon;
+          padding: 2px 8px;
+          text-align: center;
+          min-width: 80px;
+        }
+        .rs-combo {
+          display: flex;
+          align-items: center;
+        }
+        .circle-rs {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: transparent;
+          color: #000e3cff;
+          font-size: 30px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bramount-box {
+          border: 1px solid maroon;
+          padding: 1px 1px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 14px;
+        }
+        .amount-box {
+          border: 1px solid maroon;
+          padding: 6px 14px;
+          font-weight: bold;
+          min-width: 100px;
+          font-size: 30px;
+        }
+        .signature {
+          font-weight: bold;
+          font-size: 18px;
+          text-align: right;
+          margin-top: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div style="border: 1px solid maroon; padding: 1px">
+        <div style="border: 1px solid maroon; padding: 30px; position: relative;">
+  
+          <div class="header-title">VOUCHER RECEIPT</div>
+        
+          <div class="section">
+            Sl No. <span class="short-underline" style="color: maroon; font-weight: bold;">${receipt.slNo}</span>
+            <span style="margin-left:auto;">Date <span class="short-underline" style="color: maroon; font-weight: bold;">${receiptDate}</span></span>
+          </div>
+  
+          <div class="section italic">${label} <div class="underline" style="color: maroon; font-weight: bold;"> <span style="font-weight: 800"> ${partyName}</span></div></div>
+          <div class="section italic">Mobile No. <div class="underline" style="color: maroon; font-weight: bold;">${receipt.mobile}</div></div>
+          <div class="section italic">a sum of Rs. <div class="underline" style="color: maroon; font-weight: bold;">₹${numberToWords(Number(receipt.amount || 0))}</div></div>
+          <div class="section italic">Purpose/Description: <div class="underline" style="color: maroon; font-weight: bold;">${particularNature}, ${description}</div></div>
+  
+          <div class="payment-row">
+            <!-- LEFT TABLE -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <table class="payment-table">
+                <tr><th colspan="2">Payment Mode</th></tr>
+                <tr>
+                  <td class="italic">${receipt.mode === 'Cash' ? '☑️ Cash' : 'Cash'}${receipt.cashTo && receipt.cashTo.toLowerCase() !== 'cash' ? ` (${getInitials(receipt.cashTo)})` : ''}</td>
+                  <td className="italic">
+  ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankMode) ? '☑️ RTGS/NEFT' : 'RTGS/NEFT'}
+                 </td>            
+              </tr>
+                <tr>
+                  <td class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' ? '☑️ Cheque' : 'Cheque'}</td>
+                  <td class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'Card' ? '☑️ Card' : 'Card'}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="italic">${receipt.mode !== 'Cash' && receipt.bankMode === 'UPI' ? '☑️ UPI' : 'UPI'}</td>
+                </tr>
+              </table>
+              ${receipt.mode !== 'Cash' && receipt.bankMode === 'Cheque' && receipt.chequeNo ? `<div style="font-size: 15px; font-weight: bold; color: maroon;">Cheque No: ${receipt.chequeNo}</div>` : ''}
+            </div>
+  
+            <!-- MIDDLE ₹ SYMBOL + AMOUNT -->
+            <div class="rs-combo">
+              <div class="bramount-box">
+                <div class="amount-box">₹ ${parseFloat(receipt.amount).toLocaleString('en-IN')}</div>
+              </div>
+            </div>
+  
+            <!-- RIGHT SIGNATURE -->
+            <div class="signature" style="display: flex; flex-direction: column; align-items: center; margin-top: 0px;">
+              <div style="font-size: 14px; font-weight: normal; margin-bottom: 5px;">Issued By:</div>
+              <div style="color: maroon;">${'Accounts Dept.'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>
+    `;
+
+    let iframe = document.getElementById("print-frame");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.id = "print-frame";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(content);
+    doc.close();
+
+    iframe.onload = function () {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    };
+
+  }, []);
+
+  useEffect(() => {
+    const receipt = location.state?.printReceipt;
+    if (receipt) {
+      if (bankNames.includes(receipt.mode)) {
+        handlePrint(receipt);
+      } else if (receipt.type === 'Other') {
+        handlePrintOther(receipt);
+      } else if (receipt.type === 'Cash') {
+        handlePrintCash(receipt);
+      } else {
+        handlePrint(receipt);
+      }
+    }
+  }, [location.state, handlePrint, handlePrintCash, handlePrintOther, bankNames]);
 
   const numberToWords = (num) => {
     const a = [
@@ -653,6 +1458,8 @@ const MoneyReceipts = () => {
         description,
         cashTo,
         mode,
+        bankMode,
+        chequeNo,
         manualSlNo,
         particularNature,
         paymentFor,
@@ -749,6 +1556,18 @@ const MoneyReceipts = () => {
           new: mode || "",
         };
 
+      if ((oldReceipt.bankMode || "") !== (bankMode || ""))
+        changes.bankMode = {
+          old: oldReceipt.bankMode || "",
+          new: bankMode || "",
+        };
+
+      if ((oldReceipt.chequeNo || "") !== (chequeNo || ""))
+        changes.chequeNo = {
+          old: oldReceipt.chequeNo || "",
+          new: chequeNo || "",
+        };
+
       /* ===============================
          3️⃣ NEXT updateLog NUMBER
       =============================== */
@@ -816,6 +1635,8 @@ const MoneyReceipts = () => {
         ...(description !== undefined && { [`${id}.description`]: description }),
         ...(cashTo !== undefined && { [`${id}.cashTo`]: cashTo }),
         ...(mode !== undefined && { [`${id}.mode`]: mode }),
+        ...(bankMode !== undefined && { [`${id}.bankMode`]: bankMode }),
+        ...(chequeNo !== undefined && { [`${id}.chequeNo`]: chequeNo }),
         ...(manualSlNo !== undefined && { [`${id}.manualSlNo`]: manualSlNo }),
         ...(particularNature !== undefined && { [`${id}.particularNature`]: particularNature }),
         ...(paymentFor !== undefined && { [`${id}.paymentFor`]: paymentFor }),
@@ -898,6 +1719,8 @@ const MoneyReceipts = () => {
           ...(description !== undefined && { description }),
           ...(cashTo !== undefined && { cashTo }),
           ...(mode !== undefined && { mode }),
+          ...(bankMode !== undefined && { bankMode }),
+          ...(chequeNo !== undefined && { chequeNo }),
           ...(manualSlNo !== undefined && { manualSlNo }),
           ...(particularNature !== undefined && { particularNature }),
           ...(subParticularNature !== undefined && { subParticularNature }),
@@ -939,6 +1762,8 @@ const MoneyReceipts = () => {
     setNewManualSlNo(receipt.manualSlNo ?? "");
     setNewParticularNature(receipt.particularNature ?? "");
     setNewMode(receipt.mode ?? "");
+    setNewBankMode(receipt.bankMode || "RTGS/NEFT");
+    setNewChequeNo(receipt.chequeNo || "");
     setNewPaymentFor(receipt.paymentFor || "");
     setShowPopup(true);
     setNewSubParticular(receipt.subParticularNature || "");
@@ -972,6 +1797,8 @@ const MoneyReceipts = () => {
         description: newDescription,
         receiptDate: newDate || selectedReceipt.receiptDate,
         mode: newMode || selectedReceipt.mode || null,
+        bankMode: (newMode || selectedReceipt.mode) !== "Cash" ? newBankMode : "",
+        chequeNo: ((newMode || selectedReceipt.mode) !== "Cash" && newBankMode === "Cheque") ? newChequeNo : "",
         paymentFor: newPaymentFor || selectedReceipt.paymentFor,
         cashTo:
           (newMode || selectedReceipt.mode) === "Cash"
@@ -1329,8 +2156,6 @@ const MoneyReceipts = () => {
       if (r.paymentFor === "Debit") totalDebit += amt;
     });
 
-    const totalBalance = totalCredit - totalDebit;
-
     // ===============================
     // 🔹 HEADER
     // ===============================
@@ -1498,16 +2323,18 @@ const MoneyReceipts = () => {
         textColor: 255
       },
       didParseCell: function (data) {
-
         if (data.section === "body") {
-
-          if (closingBalance > openingBalance) {
+          if (overallCredit > overallDebit) {
             data.cell.styles.textColor = [0, 140, 0];
             data.cell.styles.fillColor = [235, 255, 235];
           }
-          else if (closingBalance < openingBalance) {
+          else if (overallDebit > overallCredit) {
             data.cell.styles.textColor = [200, 0, 0];
             data.cell.styles.fillColor = [255, 235, 235];
+          }
+          else {
+            data.cell.styles.textColor = [0, 0, 0];
+            data.cell.styles.fillColor = [255, 255, 255];
           }
         }
       },
@@ -1532,8 +2359,6 @@ const MoneyReceipts = () => {
       // ===============================
 
       if (type === "summary") {
-
-
 
         doc.setFontSize(14);
         doc.text("PARTICULAR  NATURES", 40, startY);
@@ -1564,16 +2389,17 @@ const MoneyReceipts = () => {
 
             if (data.section === "body") {
 
-              if (totalBalance > 0) {
+              if (totalCredit > totalDebit) {
                 data.cell.styles.textColor = [0, 140, 0];
                 data.cell.styles.fillColor = [235, 255, 235];
               }
-              else if (totalBalance < 0) {
+              else if (totalDebit > totalCredit) {
                 data.cell.styles.textColor = [200, 0, 0];
-                data.cell.styles.fillColor = [255, 230, 230];
+                data.cell.styles.fillColor = [255, 235, 235];
               }
               else {
                 data.cell.styles.textColor = [0, 0, 0];
+                data.cell.styles.fillColor = [255, 255, 255];
               }
             }
           },
@@ -1645,18 +2471,22 @@ const MoneyReceipts = () => {
           },
           didParseCell: function (data) {
             if (data.section === "body") {
-              const totalRaw = data.row.raw[5];
-              const openingRaw = data.row.raw[2];
-              const total = Number((totalRaw || "0").toString().replace(/,/g, ""));
-              const opening = Number((openingRaw || "0").toString().replace(/,/g, ""));
+              const creditRaw = data.row.raw[3];
+              const debitRaw = data.row.raw[4];
+              const credit = Number((creditRaw || "0").toString().replace(/,/g, ""));
+              const debit = Number((debitRaw || "0").toString().replace(/,/g, ""));
 
-              if (total > opening) {
+              if (credit > debit) {
                 data.cell.styles.textColor = [0, 140, 0];
                 data.cell.styles.fillColor = [235, 255, 235];
               }
-              else if (total < opening) {
+              else if (debit > credit) {
                 data.cell.styles.textColor = [200, 0, 0];
                 data.cell.styles.fillColor = [255, 235, 235];
+              }
+              else {
+                data.cell.styles.textColor = [0, 0, 0];
+                data.cell.styles.fillColor = [255, 255, 255];
               }
             }
           },
@@ -1734,13 +2564,17 @@ const MoneyReceipts = () => {
             },
             didParseCell: function (data) {
               if (data.section === "body") {
-                if (groupClosingBalance > groupOpeningBalance) {
+                if (groupCredit > groupDebit) {
                   data.cell.styles.textColor = [0, 140, 0];
                   data.cell.styles.fillColor = [235, 255, 235];
                 }
-                else if (groupClosingBalance < groupOpeningBalance) {
+                else if (groupDebit > groupCredit) {
                   data.cell.styles.textColor = [200, 0, 0];
                   data.cell.styles.fillColor = [255, 235, 235];
+                }
+                else {
+                  data.cell.styles.textColor = [0, 0, 0];
+                  data.cell.styles.fillColor = [255, 255, 255];
                 }
               }
             },
@@ -1804,18 +2638,22 @@ const MoneyReceipts = () => {
             },
             didParseCell: function (data) {
               if (data.section === "body") {
-                const totalRaw = data.row.raw[8];
-                const openingRaw = data.row.raw[5];
-                const total = Number((totalRaw || "0").toString().replace(/,/g, ""));
-                const opening = Number((openingRaw || "0").toString().replace(/,/g, ""));
+                const creditRaw = data.row.raw[7];
+                const debitRaw = data.row.raw[8];
+                const credit = Number((creditRaw || "0").toString().replace(/,/g, ""));
+                const debit = Number((debitRaw || "0").toString().replace(/,/g, ""));
 
-                if (total > opening) {
+                if (credit > debit) {
                   data.cell.styles.textColor = [0, 140, 0];
                   data.cell.styles.fillColor = [235, 255, 235];
                 }
-                else if (total < opening) {
+                else if (debit > credit) {
                   data.cell.styles.textColor = [200, 0, 0];
                   data.cell.styles.fillColor = [255, 235, 235];
+                }
+                else {
+                  data.cell.styles.textColor = [0, 0, 0];
+                  data.cell.styles.fillColor = [255, 255, 255];
                 }
               }
             },
@@ -1893,13 +2731,17 @@ const MoneyReceipts = () => {
 
             if (data.section === "body") {
 
-              if (closingBalance > openingBalance) {
+              if (overallCredit > overallDebit) {
                 data.cell.styles.textColor = [0, 140, 0];
                 data.cell.styles.fillColor = [235, 255, 235];
               }
-              else if (closingBalance < openingBalance) {
+              else if (overallDebit > overallCredit) {
                 data.cell.styles.textColor = [200, 0, 0];
                 data.cell.styles.fillColor = [255, 235, 235];
+              }
+              else {
+                data.cell.styles.textColor = [0, 0, 0];
+                data.cell.styles.fillColor = [255, 255, 255];
               }
             }
           },
@@ -1948,18 +2790,22 @@ const MoneyReceipts = () => {
           },
           didParseCell: function (data) {
             if (data.section === "body") {
-              const totalRaw = data.row.raw[9];
-              const openingRaw = data.row.raw[6];
-              const total = Number((totalRaw || "0").toString().replace(/,/g, ""));
-              const opening = Number((openingRaw || "0").toString().replace(/,/g, ""));
+              const creditRaw = data.row.raw[8];
+              const debitRaw = data.row.raw[9];
+              const credit = Number((creditRaw || "0").toString().replace(/,/g, ""));
+              const debit = Number((debitRaw || "0").toString().replace(/,/g, ""));
 
-              if (total > opening) {
+              if (credit > debit) {
                 data.cell.styles.textColor = [0, 140, 0];
                 data.cell.styles.fillColor = [235, 255, 235];
               }
-              else if (total < opening) {
+              else if (debit > credit) {
                 data.cell.styles.textColor = [200, 0, 0];
                 data.cell.styles.fillColor = [255, 235, 235];
+              }
+              else {
+                data.cell.styles.textColor = [0, 0, 0];
+                data.cell.styles.fillColor = [255, 255, 255];
               }
             }
           },
@@ -2108,6 +2954,56 @@ const MoneyReceipts = () => {
             {r.subParticularNature}
           </td>
 
+          <td style={{ backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", padding: "5px" }}>
+            <button
+              onClick={() => {
+                if (r.approval !== "Accepted") {
+                  alert("❌ Printing not allowed — approval is not granted.");
+                  return;
+                }
+
+                if (bankNames.includes(r.mode)) {
+                  handlePrint(r);
+                } else if (r.slNo?.toString().startsWith("C")) {
+                  handlePrintCash(r);
+                } else {
+                  r.eventDate ? handlePrint(r) : handlePrintOther(r);
+                }
+              }}
+              style={{
+                background: r.approval === "Accepted" ? "#b52e2e" : "#88888800",
+                color: "#fff",
+                padding: "5px 10px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: r.approval === "Accepted" ? "pointer" : "not-allowed",
+              }}
+              disabled={r.approval !== "Accepted"}
+            >
+              Print
+            </button>
+
+            <button
+              onClick={() => openPopup(r)}
+              disabled={!canEditReceipt(r.receiptDate, userAppType)}
+              style={{
+                background: canEditReceipt(r.receiptDate, userAppType)
+                  ? "#2e86de"
+                  : "#ccc",
+                color: "#fff",
+                padding: "5px 10px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: canEditReceipt(r.receiptDate, userAppType)
+                  ? "pointer"
+                  : "not-allowed",
+                opacity: canEditReceipt(r.receiptDate, userAppType) ? 1 : 0.6
+              }}
+            >
+              Edit
+            </button>
+          </td>
+
           <td style={{ fontWeight: '600', backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>
             {(
               (r.type === "Money Receipt" || r.type === "Cash") &&
@@ -2129,6 +3025,7 @@ const MoneyReceipts = () => {
 
           <td style={{ fontWeight: '600', backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>
             {r.mode}
+            {r.bankMode ? ` (${r.bankMode}${r.chequeNo ? ` - ${r.chequeNo}` : ''})` : ''}
           </td>
 
           <td style={{ fontWeight: '600', backgroundColor: index % 2 === 0 ? "#ffffff" : "#eaf4ff", }}>
@@ -2172,28 +3069,6 @@ const MoneyReceipts = () => {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             })}
-          </td>
-
-          <td style={{ justifyContent: "center" }}>
-            <button
-              onClick={() => openPopup(r)}
-              disabled={!canEditReceipt(r.receiptDate, userAppType)}
-              style={{
-                background: canEditReceipt(r.receiptDate, userAppType)
-                  ? "#2e86de"
-                  : "#ccc",
-                color: "#fff",
-                padding: "5px 10px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: canEditReceipt(r.receiptDate, userAppType)
-                  ? "pointer"
-                  : "not-allowed",
-                opacity: canEditReceipt(r.receiptDate, userAppType) ? 1 : 0.6
-              }}
-            >
-              Edit
-            </button>
           </td>
 
           <td style={{
@@ -2248,7 +3123,11 @@ const MoneyReceipts = () => {
     finalReceipts,
     userAppType,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
+    bankNames,
+    handlePrint,
+    handlePrintCash,
+    handlePrintOther
   ]);
 
   return (
@@ -2937,6 +3816,7 @@ const MoneyReceipts = () => {
                   </th>
                   <th>Particular Nature</th>
                   <th>Sub-Particular Nature</th>
+                  <th>Action</th>
                   <th>Receipt Type</th>
                   <th>Name</th>
                   <th>Mode</th>
@@ -2950,7 +3830,6 @@ const MoneyReceipts = () => {
                   <th>Function Date</th>
                   <th>Verify</th>
                   <th>Amount</th>
-                  <th>Edit</th>
                   <th>Logs</th>
                   <th>Generated By</th>
                   <th>Verified Info</th>
@@ -3479,6 +4358,26 @@ const MoneyReceipts = () => {
                 />
               </div>
 
+              {/* Bank Change Dropdown */}
+              {newMode && newMode !== "Cash" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <label style={labelStyle}>Bank Change</label>
+                  <select
+                    value={newMode}
+                    onChange={(e) => setNewMode(e.target.value)}
+                    style={inputStyle}
+                  >
+                    <option value="">-- Select Bank --</option>
+                    {bankNames
+                      .filter(bank => bank && bank.toLowerCase() !== "cash")
+                      .map(bank => (
+                        <option key={bank} value={bank}>{bank}</option>
+                      ))
+                    }
+                  </select>
+                </div>
+              )}
+
               {/* Payment Mode */}
               <div style={{ flexDirection: "column", gap: "4px", display: "none" }}>
                 <label style={labelStyle}>Payment Mode</label>
@@ -3503,6 +4402,36 @@ const MoneyReceipts = () => {
                   ))}
                 </select>
               </div>
+
+              {newMode && newMode !== "Cash" && (
+                <>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <label style={labelStyle}>Bank Mode</label>
+                    <select
+                      value={newBankMode}
+                      onChange={(e) => setNewBankMode(e.target.value)}
+                      style={inputStyle}
+                    >
+                      <option value="RTGS/NEFT">RTGS/NEFT</option>
+                      <option value="Cheque">Cheque</option>
+                      <option value="Card">Card</option>
+                      <option value="UPI">UPI</option>
+                    </select>
+                  </div>
+                  {newBankMode === "Cheque" && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      <label style={labelStyle}>Cheque No</label>
+                      <input
+                        type="text"
+                        placeholder="Enter Cheque Number"
+                        value={newChequeNo}
+                        onChange={(e) => setNewChequeNo(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Cash To */}
               {newMode === "Cash" && (
