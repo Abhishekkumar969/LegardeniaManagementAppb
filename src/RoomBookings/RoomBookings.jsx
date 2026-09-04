@@ -10,6 +10,7 @@ import RoomsRatesManager from "./RoomsRatesManager";
 import OccupancyHeatmap from "./OccupancyHeatmap";
 import BackButton from "../components/BackButton";
 import "../styles/RoomBookings.css";
+import { printHtmlContent } from "../utils/printHelper";
 
 /* ===============================
    🔥 BUCKET HELPERS
@@ -472,32 +473,7 @@ const RoomBookings = () => {
     const html = generatePrintHTML(row);
 
     // remove old iframe if any
-    const oldIframe = document.getElementById("print-iframe");
-    if (oldIframe) oldIframe.remove();
-
-    const iframe = document.createElement("iframe");
-    iframe.id = "print-iframe";
-    iframe.style.position = "fixed";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "0";
-
-    document.body.appendChild(iframe);
-
-    const iframeWindow = iframe.contentWindow;
-    const doc = iframeWindow.document;
-
-    doc.open();
-    doc.write(html);
-    doc.close();
-
-    iframeWindow.focus();
-    iframeWindow.print();
-
-    // ✅ proper cleanup — NO setTimeout
-    iframeWindow.onafterprint = () => {
-      iframe.remove();
-    };
+    printHtmlContent(html);
   };
 
   useEffect(() => {

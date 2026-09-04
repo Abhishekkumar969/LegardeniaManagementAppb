@@ -64,13 +64,15 @@ import DownloadEveryThing from "./Download/DownloadEveryThing";
 import ImportData from "./Download/ImportData";
 import EventTasks from "./components/EventTasks";
 
-export default function AppRoutes() {
+export default function AppRoutes({ userAccess }) {
     const navigate = useNavigate();
-    const [authUser, setAuthUser] = useState(undefined);
-    const [hidePaymentBar, setHidePaymentBar] = useState(false);
+    const [authUser, setAuthUser] = useState(getAuth().currentUser || null);
+    const [hidePaymentBar, setHidePaymentBar] = useState(
+        userAccess ? ["C", "E", "O"].includes(userAccess?.accessToApp) : false
+    );
     const [appCost, setAppCost] = useState(null);
 
-    const [accessChecked, setAccessChecked] = useState(false);
+    const [accessChecked, setAccessChecked] = useState(Boolean(userAccess));
 
     useEffect(() => {
         const auth = getAuth();

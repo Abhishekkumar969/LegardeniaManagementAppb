@@ -8,6 +8,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BottomNavigationBar from "../components/BottomNavigationBar";
 import { useNavigate } from "react-router-dom";
 import Pagination from '../components/Pagination';
+import { printHtmlContent } from '../utils/printHelper';
 
 const VendorTable = () => {
     const navigate = useNavigate();
@@ -276,23 +277,7 @@ const VendorTable = () => {
       </html>
     `;
 
-        let iframe = document.getElementById("print-frame");
-        if (!iframe) {
-            iframe = document.createElement("iframe");
-            iframe.id = "print-frame";
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-        }
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(content);
-        doc.close();
-
-        iframe.onload = () => {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-        };
+        printHtmlContent(content);
     }, [vendorProfile, appUserName]);
 
     const rightRef = useRef(null);

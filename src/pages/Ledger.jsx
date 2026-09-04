@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import "../styles/Ledger.css";
 import BackButton from "../components/BackButton";
+import { printHtmlContent } from "../utils/printHelper";
 
 export default function Ledger() {
     const [entries, setEntries] = useState([]);
@@ -31,8 +32,7 @@ export default function Ledger() {
 
     const handlePrint = (ref) => {
         const printContents = ref.current.innerHTML;
-        const popup = window.open("", "_blank", "width=800,height=600");
-        popup.document.write(`
+        const html = `
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -75,10 +75,8 @@ export default function Ledger() {
           ${printContents}
         </body>
       </html>
-    `);
-        popup.document.close();
-        popup.focus();
-        popup.print();
+    `;
+        printHtmlContent(html);
     };
 
     const filteredEntries = entries.filter((entry) => {
