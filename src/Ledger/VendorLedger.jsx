@@ -3,6 +3,7 @@ import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import BackButton from '../components/BackButton';
 import styles from '../styles/SalaryLedger.module.css';
+import { printHtmlContent } from '../utils/printHelper';
 
 const formatIST = (date) => {
     if (!date) return "";
@@ -198,12 +199,7 @@ const VendorLedger = () => {
             </body>
           </html>
         `;
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-        iframe.contentWindow.document.write(content);
-        iframe.contentWindow.document.close();
-        iframe.onload = () => { iframe.contentWindow.print(); document.body.removeChild(iframe); };
+        printHtmlContent(content);
     };
 
     const handlePrintAllVendors = () => {
@@ -259,12 +255,7 @@ const VendorLedger = () => {
                 </body>
             </html>
         `;
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-        iframe.contentWindow.document.write(content);
-        iframe.contentWindow.document.close();
-        iframe.onload = () => { iframe.contentWindow.print(); document.body.removeChild(iframe); };
+        printHtmlContent(content);
     };
 
     return (

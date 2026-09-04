@@ -154,8 +154,14 @@ const DownloadEveryThing = () => {
 
     return (
         <div className={styles['salary-ledger-page']}>
-            <div className={styles['header-container']}>
+            <div className={styles['header-container']} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <BackButton />
+                <button
+                    onClick={() => window.location.href = '/ImportData'}
+                    style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                    Go to Import Data
+                </button>
             </div>
 
             <div className={styles['controls-container']} style={{ padding: '0 1rem', maxWidth: '1500px', margin: '0 auto' }}>

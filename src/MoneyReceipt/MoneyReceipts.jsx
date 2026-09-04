@@ -8,6 +8,7 @@ import { getAuth } from "firebase/auth";
 import BackButton from "../components/BackButton";
 import BottomNavigationBar from "../components/BottomNavigationBar";
 import Pagination from "../components/Pagination";
+import { printHtmlContent } from "../utils/printHelper";
 
 export const formatIST = (date, withTime = false) => {
   if (!date) return "";
@@ -613,25 +614,7 @@ ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankM
   </html>
   `;
 
-    // Check if iframe exists, otherwise create it
-    let iframe = document.getElementById("print-frame");
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.id = "print-frame";
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-    }
-
-    const iframeDoc = iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(content);
-    iframeDoc.close();
-
-
-    iframe.onload = function () {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    };
+    printHtmlContent(content);
   }, []);
 
   const handlePrintCash = useCallback(async (receipt) => {
@@ -834,24 +817,7 @@ ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankM
   </html>
   `;
 
-    let iframe = document.getElementById("print-frame");
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.id = "print-frame";
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-    }
-
-    const iframeDoc = iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(content);
-    iframeDoc.close();
-
-    iframe.onload = function () {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    };
-
+    printHtmlContent(content);
   }, [getReceiptRankText]);
 
   const handlePrintOther = useCallback(async (receipt) => {
@@ -1038,24 +1004,7 @@ ${receipt.mode !== 'Cash' && (receipt.bankMode === 'RTGS/NEFT' || !receipt.bankM
 </html>
   `;
 
-    let iframe = document.getElementById("print-frame");
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.id = "print-frame";
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-    }
-
-    const doc = iframe.contentWindow.document;
-    doc.open();
-    doc.write(content);
-    doc.close();
-
-    iframe.onload = function () {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    };
-
+    printHtmlContent(content);
   }, []);
 
   useEffect(() => {

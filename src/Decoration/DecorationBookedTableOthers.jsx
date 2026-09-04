@@ -6,6 +6,7 @@ import BackButton from "../components/BackButton";
 import { useNavigate } from 'react-router-dom';
 import VendorLogPopupCell from './DecorationLogPopupCell.jsx';
 import Pagination from '../components/Pagination';
+import { printHtmlContent } from '../utils/printHelper';
 import { query, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BottomNavigationBar from "../components/BottomNavigationBar";
@@ -987,23 +988,7 @@ function BookingRow({ v, idx, startIndex, filteredCount, getAdvanceTotal, getGra
       </html>
     `;
 
-    let iframe = document.getElementById("print-frame");
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.id = "print-frame";
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-    }
-
-    const doc = iframe.contentWindow.document;
-    doc.open();
-    doc.write(content);
-    doc.close();
-
-    iframe.onload = () => {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    };
+    printHtmlContent(content);
   }, [decorationProfile, appUserName]);
 
   const th = { border: "1px solid #ccc" };
@@ -1129,15 +1114,7 @@ function BookingRow({ v, idx, startIndex, filteredCount, getAdvanceTotal, getGra
 
               <button onClick={() => {
                 if (!printRef.current) return;
-                const iframe = document.createElement("iframe");
-                iframe.style.display = "none";
-                document.body.appendChild(iframe);
-                const doc = iframe.contentWindow.document;
-                doc.open();
-                doc.write(printRef.current.innerHTML);
-                doc.close();
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
+                printHtmlContent(printRef.current.innerHTML);
               }} style={{ backgroundColor: "#51bc36ff", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", marginRight: "10px" }}>🖨
               </button>
             </div>

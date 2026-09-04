@@ -3,6 +3,7 @@ import { db } from "../firebaseConfig";
 import { collection, onSnapshot, serverTimestamp, doc, setDoc, getDoc } from "firebase/firestore";
 import "../styles/VendorTable.css";
 import BackButton from "../components/BackButton";
+import { printHtmlContent } from "../utils/printHelper";
 
 const CateringAssign = () => {
   const [caterings, setCaterings] = useState([]);
@@ -591,10 +592,7 @@ ${Object.keys(categorizedItems).length > 0 ? `
   </html>
   `;
 
-    const newWindow = window.open("", "_blank");
-    newWindow.document.write(html);
-    newWindow.document.close();
-    newWindow.print();
+    printHtmlContent(html);
   };
 
   const tableRefs = useRef([]);

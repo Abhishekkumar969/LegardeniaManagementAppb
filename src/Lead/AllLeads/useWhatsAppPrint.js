@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import { getLeadPdfFileName } from "../../utils/printHelper";
 
 export const useWhatsAppPrint = () => {
     const [leadWhatsappTemplate, setLeadWhatsappTemplate] = useState("");
@@ -708,12 +709,14 @@ export const useWhatsAppPrint = () => {
                 return;
             }
 
+            const pdfFileName = getLeadPdfFileName(lead);
+
             const finalHTML = `
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Booking_${lead.name || "Customer"}</title>
+<title>${pdfFileName}</title>
 ${MASTER_STYLE}
 </head>
 <body>
@@ -726,7 +729,7 @@ ${sections.join('<div style="page-break-after:always"></div>')}
 
             const a = document.createElement("a");
             a.href = url;
-            a.download = `Booking_${lead.name || "Customer"}.html`;
+            a.download = `${pdfFileName}.html`;
             a.click();
 
             URL.revokeObjectURL(url);

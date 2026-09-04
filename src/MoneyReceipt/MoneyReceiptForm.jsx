@@ -380,6 +380,11 @@ const MoneyReceipt = () => {
                 activeSource === "decoration" ||
                 activeSource === "roomBookings");
 
+        if (!mode) {
+            alert("Please select a Payment Mode");
+            return;
+        }
+
         if (activeSource === "others") {
             if (!particularNature) {
                 alert("Please select Particular Nature");

@@ -6,6 +6,7 @@ import Tbody from './Tbody';
 import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../components/Pagination';
+import { printHtmlContent, getLeadPdfFileName } from '../../utils/printHelper';
 
 const BookingLeadsTable = () => {
     const navigate = useNavigate();
@@ -656,10 +657,12 @@ const BookingLeadsTable = () => {
             <td>${item.rate}</td>
             <td>₹${item.total}</td>
         </tr>`).join('');
+        const pdfFileName = getLeadPdfFileName(lead, "Booking_Estimate");
+
         const printHTML = `
 <html>
 <head>
-    <title>Event Booking Estimate</title>
+    <title>${pdfFileName}</title>
      <style>
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
@@ -948,21 +951,7 @@ const BookingLeadsTable = () => {
     </body>
     </html>`;
 
-        const iframe = document.createElement("iframe");
-        iframe.style.position = "fixed";
-        iframe.style.right = "0";
-        iframe.style.bottom = "0";
-        iframe.style.width = "0";
-        iframe.style.height = "0";
-        iframe.style.border = "0";
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(printHTML);
-        iframe.contentDocument.close();
-
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        printHtmlContent(printHTML, pdfFileName);
     };
 
     const getCateringAmount = async (lead) => {
@@ -1236,11 +1225,13 @@ const BookingLeadsTable = () => {
         const netExp = (allExpenses || []).reduce((sum, exp) => sum + (Number(exp.rate) || 0), 0);
         const totalBusiness = grandTotal - netExp + totalRoyalty;
 
+        const pdfFileName = getLeadPdfFileName(lead, "Payment_Settlement");
+
         // --- HTML ---
         const printHTML = `
             <html>
             <head>
-                <title>Total Payment Settlement - ${lead.eventDate}</title>
+                <title>${pdfFileName}</title>
                 <style>
                     body { font-family: Calibri, Arial, sans-serif; font-size: 15px; padding: 7px; margin: 0; }
                     table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
@@ -1304,20 +1295,7 @@ const BookingLeadsTable = () => {
             </html>`;
 
         // --- Print Logic ---
-        const iframe = document.createElement("iframe");
-        iframe.style.position = "fixed";
-        iframe.style.right = "0";
-        iframe.style.bottom = "0";
-        iframe.style.width = "0";
-        iframe.style.height = "0";
-        iframe.style.border = "0";
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(printHTML);
-        iframe.contentDocument.close();
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        printHtmlContent(printHTML, pdfFileName);
     };
 
     const normalize = (t = "") =>
@@ -1588,15 +1566,7 @@ const BookingLeadsTable = () => {
         </body></html>
     `;
 
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(finalHTML);
-        iframe.contentDocument.close();
-
-        iframe.contentWindow.print();
+        printHtmlContent(finalHTML);
     };
 
     // ---------- Print Combined ----------
@@ -1697,10 +1667,12 @@ const BookingLeadsTable = () => {
 
 
 
+        const pdfFileName = getLeadPdfFileName(lead, "Booking_Estimate");
+
         const printHTML = `
 <html>
 <head>
-    <title>Event Booking Estimate</title>
+    <title>${pdfFileName}</title>
      <style>
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
@@ -2013,8 +1985,12 @@ const BookingLeadsTable = () => {
         if (lunchHTML?.trim()) sections.push(lunchHTML);
         if (dinnerHTML?.trim()) sections.push(dinnerHTML);
 
+        const pdfFileName = getLeadPdfFileName(lead, "Menu");
+
         const finalHTML = `
-        <html><body>
+        <html>
+        <head><title>${pdfFileName}</title></head>
+        <body>
         ${sections
                 .map((html, i) =>
                     i === sections.length - 1
@@ -2025,15 +2001,7 @@ const BookingLeadsTable = () => {
         </body></html>
     `;
 
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(finalHTML);
-        iframe.contentDocument.close();
-
-        iframe.contentWindow.print();
+        printHtmlContent(finalHTML, pdfFileName);
     };
 
     // /* ----------------- Print Section Ends ----------------- */

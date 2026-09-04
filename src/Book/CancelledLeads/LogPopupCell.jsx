@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/LogPopupCell.css";
+import { printHtmlContent } from "../../utils/printHelper";
 
 const LogPopupCell = ({ lead }) => {
     const [showLogs, setShowLogs] = useState(false);
@@ -173,9 +174,7 @@ const LogPopupCell = ({ lead }) => {
     };
 
     const handlePrint = () => {
-        const printWindow = window.open("", "", "width=1000,height=800");
-        printWindow.document.write(generatePrintHTML({ lead, updateLogs }));
-        printWindow.print();
+        printHtmlContent(generatePrintHTML({ lead, updateLogs }));
     };
 
     return (

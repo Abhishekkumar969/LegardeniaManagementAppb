@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BottomNavigationBar from "../components/BottomNavigationBar";
 import Pagination from '../components/Pagination';
+import { printHtmlContent } from '../utils/printHelper';
 
 const DecorationTable = () => {
     const navigate = useNavigate();
@@ -295,23 +296,7 @@ const DecorationTable = () => {
       </html>
     `;
 
-        let iframe = document.getElementById("print-frame");
-        if (!iframe) {
-            iframe = document.createElement("iframe");
-            iframe.id = "print-frame";
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-        }
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(content);
-        doc.close();
-
-        iframe.onload = () => {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-        };
+        printHtmlContent(content);
     }, [decorationProfile, appUserName]);
 
     const rightRef = useRef(null);

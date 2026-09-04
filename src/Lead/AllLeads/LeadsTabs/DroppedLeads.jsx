@@ -7,6 +7,7 @@ import BackButton from "../../../components/BackButton";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../../components/Pagination';
+import { printHtmlContent, getLeadPdfFileName } from '../../../utils/printHelper';
 
 const BookingLeadsTable = () => {
     const navigate = useNavigate();
@@ -476,10 +477,12 @@ ${Number(menuData.qty || 0).toLocaleString('en-IN')}
         </div>
         `;
 
+        const pdfFileName = getLeadPdfFileName(lead, "Booking_Estimate");
+
         const content = `
     <html>
     <head>
-        <title>Booking Estimate_${lead.functionDate ? new Date(lead.functionDate).toLocaleDateString('en-GB').split('/').join('-') : ''}</title>
+        <title>${pdfFileName}</title>
         <style>
             body { font-family: Arial; padding: 30px; line-height: 1.4; border: 2px solid red; color:#00054b }
             h2 { text-align: center; color: red; font-weight: bold; text-decoration: underline; font-size: 24px; }
@@ -575,28 +578,7 @@ ${Number(menuData.qty || 0).toLocaleString('en-IN')}
     </html>
     `;
 
-        // ✅ hidden iframe banaya
-        const iframe = document.createElement("iframe");
-        iframe.style.position = "fixed";
-        iframe.style.right = "0";
-        iframe.style.bottom = "0";
-        iframe.style.width = "0";
-        iframe.style.height = "0";
-        iframe.style.border = "0";
-        document.body.appendChild(iframe);
-
-        // iframe ke andar HTML inject
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(content);
-        iframe.contentDocument.close();
-
-        // print kar do
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-
-        // cleanup
-        setTimeout(() => document.body.removeChild(iframe), 1000);
-
+        printHtmlContent(content, pdfFileName);
     };
 
     const handleWinFilter = (range) => {

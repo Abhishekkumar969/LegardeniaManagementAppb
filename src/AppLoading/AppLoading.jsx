@@ -1,41 +1,44 @@
 import React from "react";
+import "./AppLoading.css";
 
-export default function AppLoading() {
-    return (
-        <div style={styles.wrapper}>
-            {/* Spinner */}
-            <div style={styles.spinner}></div>
+export default function AppLoading({ title = "NfeedNews Publisher Portal", message = "Verifying Credentials & Access, please wait..." }) {
+  return (
+    <div className="blue-loading-wrapper">
+      {/* Background ambient lighting */}
+      <div className="ambient-glow" />
 
-            {/* Text */}
-            <div style={styles.text}>Loading, please wait...</div>
+      {/* Floating Animated Bubbles */}
+      <div className="bubbles-container">
+        <span className="bubble b1" />
+        <span className="bubble b2" />
+        <span className="bubble b3" />
+        <span className="bubble b4" />
+        <span className="bubble b5" />
+        <span className="bubble b6" />
+        <span className="bubble b7" />
+        <span className="bubble b8" />
+        <span className="bubble b9" />
+        <span className="bubble b10" />
+        <span className="bubble b11" />
+        <span className="bubble b12" />
+        <span className="bubble b13" />
+        <span className="bubble b14" />
+        <span className="bubble b15" />
+      </div>
+
+      {/* Center Loading Card */}
+      <div className="loading-card">
+        <div className="spinner-container">
+          <div className="outer-spinner-ring" />
+          <div className="inner-pulsing-orb" />
         </div>
-    );
+
+        <h2 className="loading-title">{title}</h2>
+        <p className="loading-subtitle">
+          {message}
+          <span className="animated-dots" />
+        </p>
+      </div>
+    </div>
+  );
 }
-
-const styles = {
-    wrapper: {
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#f8f9fa",
-    },
-
-    spinner: {
-        width: "48px",
-        height: "48px",
-        border: "5px solid #e0e0e0",
-        borderTop: "5px solid #0d6efd",
-        borderRadius: "50%",
-        animation: "spin 1s linear infinite",
-    },
-
-    text: {
-        marginTop: "14px",
-        fontSize: "14px",
-        color: "#555",
-        letterSpacing: "0.5px",
-    },
-};

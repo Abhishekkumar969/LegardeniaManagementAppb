@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { doc, collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -111,7 +111,7 @@ export default function DailyReport() {
         const clean = name.trim().toLowerCase();
 
         if (
-            ["cash", "cash-cash", "cashcash", "cash cash", "cash-", "cash--", "Cash"]
+            ["cash", "cash-cash", "cashcash", "cash cash", "cash-", "cash--", "pettycash", "lockerbalance"]
                 .includes(clean)
         ) {
             return "Cash In Hand";
@@ -146,18 +146,8 @@ export default function DailyReport() {
         }
 
         const formattedDate = formatDate(selectedDate);
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        const last24Keys = [];
-        let pointer = new Date(selectedDate);
-
-        for (let i = 0; i < 120; i++) {
-            const key = `${monthNames[pointer.getMonth()]}${pointer.getFullYear()}`;
-            last24Keys.push(key);
-            pointer.setMonth(pointer.getMonth() - 1);
-        }
-
-        // ✅ हर month key ka latest snapshot yaha store hoga
+        // ✅ Cache for all receipts
         const monthCache = new Map();
 
         const recomputeAll = () => {
@@ -177,7 +167,7 @@ export default function DailyReport() {
             monthCache.forEach((monthData) => {
                 Object.entries(monthData || {}).forEach(([id, trx]) => {
                     if (!trx || typeof trx !== "object") return;
-                    if (String(trx.approval || "").trim() !== "Accepted") return;
+
 
                     const amt = Number(String(trx.amount || 0).replace(/,/g, "")) || 0;
                     const type = String(trx.paymentFor || "").trim().toLowerCase();
@@ -217,12 +207,8 @@ export default function DailyReport() {
                                 (openingBankBalances[trx.mode] || 0) + signed;
                         }
 
-                        if (
-                            trx.mode === "Cash" &&
-                            trx.cashTo &&
-                            !["pettyCash", "lockerBalance"].includes(trx.cashTo)
-                        ) {
-                            const cashKey = normalizeCashName(trx.cashTo);
+                        if (trx.mode === "Cash") {
+                            const cashKey = normalizeCashName(trx.cashTo || "Cash In Hand");
                             openingCashBalances[cashKey] =
                                 (openingCashBalances[cashKey] || 0) + signed;
                         }
@@ -240,12 +226,8 @@ export default function DailyReport() {
                             }
                         }
 
-                        if (
-                            trx.mode === "Cash" &&
-                            trx.cashTo &&
-                            !["pettyCash", "lockerBalance"].includes(trx.cashTo)
-                        ) {
-                            const cashKey = normalizeCashName(trx.cashTo);
+                        if (trx.mode === "Cash") {
+                            const cashKey = normalizeCashName(trx.cashTo || "Cash In Hand");
 
                             if (isCredit) {
                                 cashCreditToday[cashKey] =
@@ -370,16 +352,14 @@ export default function DailyReport() {
             });
         };
 
-        last24Keys.forEach((key) => {
-            const unsub = onSnapshot(doc(db, "moneyReceipts", key), (snap) => {
-                if (!snap.exists()) return;
-
-                monthCache.set(key, snap.data());
-                recomputeAll();
+        const q = collection(db, "moneyReceipts");
+        const unsubReceipts = onSnapshot(q, (snapshot) => {
+            snapshot.docs.forEach((docSnap) => {
+                monthCache.set(docSnap.id, docSnap.data());
             });
-
-            unsubscribers.push(unsub);
+            recomputeAll();
         });
+        unsubscribers.push(unsubReceipts);
 
         /* 🔥 LOCKER REALTIME */
         const unsubLocker = onSnapshot(collection(db, "accountant"), (snap) => {

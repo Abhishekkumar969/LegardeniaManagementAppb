@@ -6,6 +6,7 @@ import { getAuth } from "firebase/auth";
 import BackButton from "../components/BackButton";
 import BottomNavigationBar from "../components/BottomNavigationBar";
 import { useNavigate } from "react-router-dom";
+import { printHtmlContent } from "../utils/printHelper";
 
 const GSTSummary = () => {
     const navigate = useNavigate();
@@ -428,22 +429,7 @@ ${totalsHTML}
         </html>
     `;
 
-        // Create hidden iframe and print
-        const iframe = document.createElement("iframe");
-        iframe.style.position = "fixed";
-        iframe.style.right = "0";
-        iframe.style.bottom = "0";
-        iframe.style.width = "0";
-        iframe.style.height = "0";
-        iframe.style.border = "0";
-        document.body.appendChild(iframe);
-
-        iframe.contentDocument.open();
-        iframe.contentDocument.write(printHTML);
-        iframe.contentDocument.close();
-
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        printHtmlContent(printHTML);
     };
 
     return (
