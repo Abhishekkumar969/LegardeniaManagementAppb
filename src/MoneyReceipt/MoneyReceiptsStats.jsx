@@ -390,9 +390,7 @@ const MoneyReceipts = () => {
   
         <!-- MIDDLE ₹ SYMBOL + AMOUNT IN BOX -->
         <div class="rs-combo">
-         <div class="bramount-box"> <div class="amount-box">₹ ${Number(receipt.amount || 0).toLocaleString("en-IN", {
-      minimumFractionDigits: 2, maximumFractionDigits: 2
-    })} </div> </div>
+         <div class="bramount-box"> <div class="amount-box">₹ ${Number(receipt.amount || 0).toLocaleString("en-IN")} </div> </div>
         </div>
   
         <!-- RIGHT SIGNATURE -->
